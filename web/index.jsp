@@ -54,7 +54,7 @@
             <div class="content-wrapper">
                 <aside class="sidebar">
                     <div class="filter-group">
-                        <h3>DANH MỤC SẢN PHẨM</h3>
+                        <h3>DANH MỤC SẢHẨM</h3>
                         <ul id="category-filter-list">
                             <%-- Các biến p_searchQuery, p_sort... bây giờ đã tồn tại --%>
                             <li><a href="products?categoryId=&searchQuery=<%= p_searchQuery%>&minPrice=<%= p_minPrice%>&maxPrice=<%= p_maxPrice%>&sort=<%= p_sort%>">
