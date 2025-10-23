@@ -1,0 +1,22 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<footer class="main-footer">
+    <div class="container footer-content">
+        <div class="footer-links">
+            <a href="#">Về chúng tôi</a>
+            <a href="#">Chính sách bảo mật</a>
+            <a href="#">Điều khoản dịch vụ</a>
+            <a href="#">Liên hệ</a>
+        </div>
+        <div class="footer-copyright">
+            <p>Bản quyền &copy; 2025 thuộc về <strong>Nhóm 2 - UNETI</strong>.</p>
+            <p>Nội dung này chỉ dành cho người trên 18 tuổi. Thưởng thức có trách nhiệm.</p>
+        </div>
+    </div>
+</footer>
+<div id="cart-notification" class="cart-notification-popup">
+    Thêm vào giỏ hàng thành công!
+</div>
+
+
+<script src="js/script.js"></script>
