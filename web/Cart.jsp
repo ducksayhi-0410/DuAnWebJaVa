@@ -15,41 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-    <style>
-        .cart-container { padding-top: 30px; }
-        .cart-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .cart-table th, .cart-table td { border: 1px solid #eee; padding: 15px; text-align: left; }
-        .cart-table th { background-color: #f9f9f9; }
-        .cart-table td.product-thumbnail img { width: 80px; height: auto; }
-        .cart-table td.product-name a { color: #a40000; text-decoration: none; font-weight: 500;}
-        .cart-table td.product-quantity input { width: 60px; text-align: center; padding: 5px; }
-        .cart-table td.product-remove a { color: red; font-size: 18px; text-decoration: none; }
-        .cart-total { 
-            margin-top: 30px; 
-            width: 40%; 
-            margin-left: auto; 
-            border: 2px solid #a40000; 
-            padding: 20px; 
-            background: #fdfdfd; 
-        }
-        .cart-total h2 { margin-top: 0; }
-        .cart-total p { display: flex; justify-content: space-between; font-size: 16px; margin: 15px 0; }
-        .cart-total p.total-price { font-size: 20px; font-weight: bold; color: #a40000; }
-        .btn-checkout {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background-color: #a40000;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
+    
 </head>
 <body>
 
