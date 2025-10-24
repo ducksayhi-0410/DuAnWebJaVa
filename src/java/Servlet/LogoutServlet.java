@@ -1,6 +1,8 @@
 package Servlet;
 
-
+import Db.CartDb; // Thêm import
+import Models.Account; // Thêm import
+import Models.Cart; // Thêm import
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,12 +19,30 @@ public class LogoutServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false); 
+        
         if (session != null) {
-            session.invalidate(); 
+            // =====================================================
+            // BẮT ĐẦU LOGIC LƯU GIỎ HÀNG
+            // =====================================================
+            
+            // Lấy tài khoản và giỏ hàng TỪ SESSION
+            Account acc = (Account) session.getAttribute("acc");
+            Cart cart = (Cart) session.getAttribute("cart");
+
+            // Nếu người dùng đã đăng nhập VÀ có giỏ hàng
+            if (acc != null && cart != null) {
+                CartDb cartDb = new CartDb();
+                // Lưu giỏ hàng hiện tại vào CSDL
+                cartDb.saveCart(acc.getUsername(), cart);
+            }
+            
+            // =====================================================
+            // KẾT THÚC LOGIC LƯU GIỎ HÀNG
+            // =====================================================
+            
+            session.invalidate(); // Xóa session SAU KHI ĐÃ LƯU
         }
         
-        // === SỬA DÒNG NÀY ===
-        // Chuyển hướng về servlet /products để nó tải lại dữ liệu
         response.sendRedirect("products"); 
     }
 }

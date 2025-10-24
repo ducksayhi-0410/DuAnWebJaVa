@@ -1,0 +1,45 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%
+    // Servlet sẽ đặt 'activePage' (ví dụ: "profile", "edit", "password")
+    String activePage = (String) request.getAttribute("activePage");
+    if (activePage == null)
+        activePage = "";
+%>
+
+<nav class="account-nav">
+    <div class="nav-title">
+        <i class="fas fa-user-circle"></i>
+        <h3>Tài khoản của tôi</h3>
+    </div>
+    <ul>
+        <li>
+            <a href="profile" class="<%= "profile".equals(activePage) ? "active" : ""%>">
+                <i class="fas fa-user"></i>
+                <span>Thông tin cá nhân</span>
+            </a>
+        </li>
+        <li>
+            <a href="edit-profile" class="<%= "edit".equals(activePage) ? "active" : ""%>">
+                <i class="fas fa-user-edit"></i>
+                <span>Sửa thông tin</span>
+            </a>
+        </li>
+        <li>
+            <a href="change-password" class="<%= "password".equals(activePage) ? "active" : ""%>">
+                <i class="fas fa-key"></i>
+                <span>Đổi mật khẩu</span>
+            </a>
+        </li>
+        <li>
+            <a href="my-orders" class="<%= "orders".equals(activePage) ? "active" : ""%>">
+                <i class="fas fa-history"></i> <span>Lịch sử mua hàng</span> </a>
+        </li>
+        <li>
+            <a href="logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng xuất</span>
+            </a>
+        </li>
+    </ul>
+</nav>

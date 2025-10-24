@@ -1,6 +1,6 @@
 package Db;
 
-import Models.Product;
+import Models.Product; // Đảm bảo bạn đã cập nhật Product.java
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +14,7 @@ public class ProductDb {
         List<Product> productList = new ArrayList<>();
         List<Object> params = new ArrayList<>(); 
 
+        // Câu SQL không đổi, vì "SELECT *" đã bao gồm cột 'manufacturer' mới
         StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE 1=1");
 
         // 1. Lọc theo Danh mục
@@ -53,6 +54,7 @@ public class ProductDb {
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                    // === SỬA ĐỔI CHÍNH (THÊM HÃNG SẢN XUẤT) ===
                     productList.add(new Product(
                         rs.getInt("id"),
                         rs.getString("name"),
@@ -60,7 +62,8 @@ public class ProductDb {
                         rs.getDouble("price"),
                         rs.getString("imageUrl"),
                         rs.getInt("categoryId"),
-                        rs.getInt("quantity")
+                        rs.getInt("quantity"),
+                        rs.getString("manufacturer") // <-- THÊM DÒNG NÀY
                     ));
                 }
             }
@@ -70,6 +73,7 @@ public class ProductDb {
         return productList;
     }
 
+    // --- Phương thức này không cần sửa, vì nó chỉ đếm (COUNT) ---
     public int getProductCount(String categoryId, String searchQuery, String minPrice, String maxPrice) {
         List<Object> params = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE 1=1");
@@ -109,8 +113,9 @@ public class ProductDb {
         return 0;
     }
 
-    // --- PHƯƠNG THỨC MỚI ĐỂ LẤY 1 SẢN PHẨM ---
+    // --- PHƯƠNG THỨC LẤY 1 SẢN PHẨM ---
     public Product getProductById(String productId) {
+        // Câu SQL không đổi, vì "SELECT *" đã bao gồm cột 'manufacturer' mới
         String sql = "SELECT * FROM products WHERE id = ?";
         
         try (Connection conn = new DBContext().getConnection();
@@ -120,6 +125,7 @@ public class ProductDb {
             
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
+                    // === SỬA ĐỔI CHÍNH (THÊM HÃNG SẢN XUẤT) ===
                     return new Product(
                         rs.getInt("id"),
                         rs.getString("name"),
@@ -127,7 +133,8 @@ public class ProductDb {
                         rs.getDouble("price"),
                         rs.getString("imageUrl"),
                         rs.getInt("categoryId"),
-                        rs.getInt("quantity")
+                        rs.getInt("quantity"),
+                        rs.getString("manufacturer") // <-- THÊM DÒNG NÀY
                     );
                 }
             }

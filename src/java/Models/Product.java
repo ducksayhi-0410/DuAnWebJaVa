@@ -7,21 +7,23 @@ public class Product {
     private double price;
     private String imageUrl;
     private int categoryId;
-    private int quantity; // <-- THÊM DÒNG NÀY
+    private int quantity;
+    private String manufacturer; // <-- THÊM DÒNG NÀY
 
     // Constructors
     public Product() {
     }
 
-    // CẬP NHẬT CONSTRUCTOR (thêm quantity)
-    public Product(int id, String name, String description, double price, String imageUrl, int categoryId, int quantity) {
+    // CẬP NHẬT CONSTRUCTOR (thêm manufacturer)
+    public Product(int id, String name, String description, double price, String imageUrl, int categoryId, int quantity, String manufacturer) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.imageUrl = imageUrl;
         this.categoryId = categoryId;
-        this.quantity = quantity; // <-- THÊM DÒNG NÀY
+        this.quantity = quantity;
+        this.manufacturer = manufacturer; // <-- THÊM DÒNG NÀY
     }
 
     // Getters and Setters (Giữ nguyên các getter/setter cũ)
@@ -73,13 +75,21 @@ public class Product {
         this.categoryId = categoryId;
     }
     
-    // <-- THÊM GETTER/SETTER CHO QUANTITY -->
     public int getQuantity() {
         return quantity;
     }
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    // <-- THÊM GETTER/SETTER CHO MANUFACTURER -->
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
     }
     // <-- KẾT THÚC -->
 
@@ -90,7 +100,8 @@ public class Product {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", categoryId=" + categoryId +
-                ", quantity=" + quantity + // <-- THÊM DÒNG NÀY
+                ", quantity=" + quantity +
+                ", manufacturer='" + manufacturer + '\'' + // <-- THÊM DÒNG NÀY
                 '}';
     }
 }

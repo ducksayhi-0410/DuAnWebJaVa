@@ -54,7 +54,7 @@ public class AddToCartServlet extends HttpServlet {
                     Item newItem = new Item(product, quantity);
                     cart.addItem(newItem);
                     success = true;
-                    message = "Thêm vào giỏ hàng thành công!";
+                    message = "Đã thêm '" + product.getName() + "' vào giỏ hàng!";
                 } else {
                     message = "Số lượng mua vượt quá số lượng tồn kho!";
                 }
@@ -77,12 +77,33 @@ public class AddToCartServlet extends HttpServlet {
                 out.flush();
                 
             } else {
-                // Nếu là form submit bình thường (từ trang chi tiết)
+                //
+                // =====================================================
+                // BẮT ĐẦU SỬA LỖI (THÊM THÔNG BÁO)
+                // =====================================================
+                //
                 if (!success) {
                     session.setAttribute("cartError", message);
+                } else {
+                    // Gửi thông báo THÀNH CÔNG về session
+                    session.setAttribute("cartSuccess", message);
                 }
-                // Chuyển hướng như cũ
-                response.sendRedirect("product-detail?productId=" + productId);
+                
+                // Kiểm tra xem form được gửi từ đâu
+                String source = request.getParameter("source");
+                
+                if ("index".equals(source)) {
+                    // Nếu từ trang chủ (index.jsp), quay về trang chủ
+                    response.sendRedirect("products");
+                } else {
+                    // Nếu từ trang chi tiết (ProductDetail.jsp), quay về trang chi tiết
+                    response.sendRedirect("product-detail?productId=" + productId);
+                }
+                //
+                // =====================================================
+                // KẾT THÚC SỬA LỖI
+                // =====================================================
+                //
             }
             
         } catch (Exception e) {
@@ -94,6 +115,7 @@ public class AddToCartServlet extends HttpServlet {
                 out.print("{\"success\": false, \"message\": \"Lỗi máy chủ: " + e.getMessage() + "\", \"cartTotalItems\": " + cart.getTotalItems() + "}");
                 out.flush();
             } else {
+                session.setAttribute("cartError", "Lỗi: " + e.getMessage());
                 response.sendRedirect("products");
             }
         }

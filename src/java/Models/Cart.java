@@ -1,6 +1,5 @@
 package Models;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +26,7 @@ public class Cart {
         
         if (existingItem != null) {
             // Nếu sản phẩm đã có, chỉ cộng thêm số lượng
+            // (Nên kiểm tra số lượng tồn kho ở đây, nhưng AddToCartServlet đã làm rồi)
             existingItem.setQuantity(existingItem.getQuantity() + newItem.getQuantity());
         } else {
             // Nếu sản phẩm chưa có, thêm mới
@@ -67,5 +67,19 @@ public class Cart {
     // Đếm số lượng loại sản phẩm trong giỏ
     public int getTotalItems() {
         return items.size();
+    }
+    
+    /**
+     * PHƯƠNG THỨC MỚI:
+     * Gộp các item từ một giỏ hàng khác (ví dụ: giỏ hàng session)
+     * vào giỏ hàng hiện tại (giỏ hàng CSDL).
+     */
+    public void mergeCart(Cart otherCart) {
+        if (otherCart == null) {
+            return;
+        }
+        for (Item otherItem : otherCart.getItems()) {
+            this.addItem(otherItem); // Phương thức addItem đã xử lý việc cộng dồn số lượng
+        }
     }
 }

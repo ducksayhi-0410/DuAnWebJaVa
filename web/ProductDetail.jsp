@@ -29,11 +29,11 @@
 </head>
 <body>
     
-    <%-- === SỬA LỖI: Dùng static include (dấu <%@) để chia sẻ biến Java === --%>
     <%@ include file="WEB-INF/main-header.jspf" %>
     
     <main class="container">
-        
+   
+         
         <%
             if (p != null) {
         %>
@@ -43,30 +43,39 @@
         </div>
         
         <div class="detail-container">
-            <div class="detail-image">
+ 
+             <div class="detail-image">
                 <img src="<%= p.getImageUrl() %>" alt="<%= p.getName() %>">
             </div>
             
             <div class="detail-info">
                 <h1><%= p.getName() %></h1>
+                
+                <p class="detail-manufacturer">
+                    <strong>Hãng sản xuất:</strong> <%= p.getManufacturer() %>
+                </p>
                 <p class="detail-price"><%= formatter.format(p.getPrice()) %> ₫</p>
                 <p class="detail-stock">Số lượng còn lại: <%= p.getQuantity() %></p>
                 
                 <form action="add-to-cart" method="POST" class="detail-cart-form">
                     <input type="hidden" name="productId" value="<%= p.getId() %>">
-                    <label for="quantity">Số lượng:</label>
+        
+                     <label for="quantity">Số lượng:</label>
                     <input type="number" id="quantity" name="quantity" value="1" min="1" max="<%= p.getQuantity() %>">
                     
                     <button type"submit" class="btn-add-cart">
-                        <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng
+                
+                         <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng
                     </button>
                 </form>
                 
                 <div class="detail-description">
-                    <p><%= p.getDescription() %></p>
+                 
+                     <p><%= p.getDescription() %></p>
                 </div>
                 
-                <a href="products" class="back-link">&larr; Quay lại trang chủ</a>
+                <a href="products" class="back-link">&larr;
+ Quay lại trang chủ</a>
             </div>
         </div>
 
@@ -75,14 +84,15 @@
         %>
             <h1>Sản phẩm không tồn tại</h1>
             <p>Sản phẩm bạn đang tìm kiếm có thể đã bị xóa hoặc không có sẵn.</p>
-            <a href="products" class="back-link">&larr; Quay lại trang chủ</a>
+     
+                <a href="products" class="back-link">&larr;
+ Quay lại trang chủ</a>
         <%
             }
         %>
         
     </main>
     
-    <%-- === SỬA LỖI: Dùng static include (dấu <%@) === --%>
     <%@ include file="WEB-INF/main-footer.jspf" %>
     
 </body>
