@@ -92,10 +92,45 @@ public class OrderDb {
         }
     }
     
-    // --- PHƯƠNG THỨC MỚI ĐỂ LẤY BIÊN LAI (BILL) ---
+    // --- CÁC PHƯƠNG THỨC MỚI ĐỂ LẤY LỊCH SỬ/BIÊN LAI ---
 
     /**
-     * Lấy thông tin chi tiết của 1 đơn hàng (danh sách sản phẩm)
+     * Lấy tất cả đơn hàng của 1 user, sắp xếp mới nhất lên đầu.
+     * (Dùng cho trang Lịch sử mua hàng)
+     */
+    public List<Order> getOrdersByUsername(String username) {
+        List<Order> orderList = new ArrayList<>();
+        String sql = "SELECT * FROM orders WHERE username = ? ORDER BY order_date DESC";
+        
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Order order = new Order();
+                    order.setId(rs.getInt("id"));
+                    order.setUsername(rs.getString("username"));
+                    order.setOrderDate(rs.getTimestamp("order_date"));
+                    order.setTotalMoney(rs.getDouble("total_money"));
+                    order.setStatus(rs.getString("status"));
+                    order.setShippingAddress(rs.getString("shipping_address"));
+                    order.setShippingPhone(rs.getString("shipping_phone"));
+                    
+                    // Lấy các sản phẩm chi tiết cho đơn hàng này
+                    order.setDetails(getOrderDetails(order.getId()));
+                    
+                    orderList.add(order);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy lịch sử đơn hàng: " + e.getMessage());
+        }
+        return orderList;
+    }
+
+    /**
+     * Lấy thông tin chi tiết (sản phẩm) của 1 đơn hàng.
      */
     public List<OrderDetail> getOrderDetails(int orderId) {
         List<OrderDetail> details = new ArrayList<>();
@@ -107,7 +142,6 @@ public class OrderDb {
             ps.setInt(1, orderId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    // Dùng constructor rỗng và setter của OrderDetail.java
                     OrderDetail detail = new OrderDetail();
                     detail.setId(rs.getInt("id"));
                     detail.setOrderId(rs.getInt("order_id"));
@@ -126,6 +160,7 @@ public class OrderDb {
 
     /**
      * Lấy thông tin 1 đơn hàng VÀ kiểm tra xem nó có thuộc về user_hiện_tại không
+     * (Dùng cho trang Xuất biên lai)
      */
     public Order getOrderByIdAndUser(int orderId, String username) {
         Order order = null;
@@ -139,11 +174,10 @@ public class OrderDb {
             
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    // Dùng constructor rỗng và setter của Order.java
                     order = new Order();
                     order.setId(rs.getInt("id"));
                     order.setUsername(rs.getString("username"));
-                    order.setOrderDate(rs.getTimestamp("order_date")); // Lấy DATETIME
+                    order.setOrderDate(rs.getTimestamp("order_date"));
                     order.setTotalMoney(rs.getDouble("total_money"));
                     order.setStatus(rs.getString("status"));
                     order.setShippingAddress(rs.getString("shipping_address"));

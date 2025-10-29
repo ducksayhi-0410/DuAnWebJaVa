@@ -30,10 +30,11 @@
     
     <main class="container">
         <div class="breadcrumbs" style="margin-top: 20px;">
-            <a href="products">Trang chủ</a> / <a href="profile">Tài khoản</a> / <span>Lịch sử mua hàng</span>
+            <a href="products">Trang chủ</a> / <span>Lịch sử mua hàng</span>
         </div>
         
         <div class="account-container">
+            <%-- Gọi file nav mới của bạn --%>
             <%@ include file="WEB-INF/account-nav.jspf" %>
             
             <section class="account-content">
@@ -46,7 +47,7 @@
                         <p>Bạn chưa có đơn hàng nào.</p>
                     <%
                         } else {
-                            // Lặp qua từng đơn hàng (outer loop)
+                            // Lặp qua từng đơn hàng
                             for (Order order : orderList) {
                     %>
                         <div class="order-card">
@@ -60,7 +61,6 @@
                             
                             <div class="order-card-body">
                                 <div class="order-shipping-info">
-                                    <p><strong>Người nhận:</strong> <%= (Account) session.getAttribute("acc").getFullname() %></p>
                                     <p><strong>Địa chỉ giao hàng:</strong> <%= order.getShippingAddress() %></p>
                                     <p><strong>Số điện thoại:</strong> <%= order.getShippingPhone() %></p>
                                 </div>
@@ -76,7 +76,7 @@
                                     </thead>
                                     <tbody>
                                         <%
-                                            // Lặp qua chi tiết của đơn hàng (inner loop)
+                                            // Lặp qua chi tiết của đơn hàng
                                             for (OrderDetail detail : order.getDetails()) {
                                         %>
                                         <tr>
@@ -86,7 +86,7 @@
                                             <td class="item-total"><%= formatter.format(detail.getPrice() * detail.getQuantity()) %> ₫</td>
                                         </tr>
                                         <%
-                                            } // Kết thúc inner loop
+                                            } // Kết thúc lặp chi tiết
                                         %>
                                     </tbody>
                                 </table>
@@ -97,7 +97,7 @@
                             </div>
                         </div>
                     <%
-                            } // Kết thúc outer loop
+                            } // Kết thúc lặp đơn hàng
                         } // Kết thúc else
                     %>
                 </div>
