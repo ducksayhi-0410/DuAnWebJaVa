@@ -43,8 +43,10 @@ body, html {
 }
 
 .logo img {
-    height: 50px;
-    margin-bottom: 20px;
+    max-width: 180px; /* Hoặc kích thước bạn muốn */
+    height: auto; /* Đảm bảo chiều cao tự động điều chỉnh theo chiều rộng để không bị dẹt */
+    display: block; /* Để căn giữa dễ dàng hơn */
+    margin: 0 auto 20px auto; /* Căn giữa và tạo khoảng cách dưới */
 }
 
 h1 {
