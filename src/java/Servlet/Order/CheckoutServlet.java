@@ -1,9 +1,8 @@
-package Servlet.Order;
+package Servlet.Order; // Hoặc package bạn đang dùng
 
 import Models.Account;
 import Models.Cart;
 import java.io.IOException;
-// ĐẢM BẢO LÀ "jakarta"
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,24 +19,21 @@ public class CheckoutServlet extends HttpServlet {
         
         HttpSession session = request.getSession();
         
-        // 1. Kiểm tra phiên đăng nhập
         Account acc = (Account) session.getAttribute("acc");
         
         if (acc == null) {
-            // Nếu CHƯA đăng nhập, chuyển về trang đăng nhập
             response.sendRedirect("DangNhap.jsp");
             return;
         }
         
-        // 2. Kiểm tra giỏ hàng
         Cart cart = (Cart) session.getAttribute("cart");
         if (cart == null || cart.getItems().isEmpty()) {
-            // Nếu giỏ hàng trống, quay lại trang giỏ hàng
             response.sendRedirect("cart");
             return;
         }
         
-        // 3. Nếu OK, chuyển tiếp đến trang Checkout.jsp
-        request.getRequestDispatcher("Checkout.jsp").forward(request, response);
+        // === SỬA LỖI Ở ĐÂY ===
+        // Đổi "Checkout.jsp" (viết hoa) thành "checkout.jsp" (viết thường)
+        request.getRequestDispatcher("checkout.jsp").forward(request, response);
     }
 }

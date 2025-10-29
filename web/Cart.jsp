@@ -14,8 +14,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    
 </head>
 <body>
 
@@ -30,9 +28,6 @@
             <h1>Giỏ hàng</h1>
             
             <%
-                // === SỬA LỖI: XÓA DÒNG "Cart cart = ..." ===
-                // Biến 'cart' đã được tạo trong main-header.jspf
-                
                 DecimalFormat formatter = new DecimalFormat("###,###,###");
                 
                 if (cart == null || cart.getTotalItems() == 0) {
@@ -44,7 +39,7 @@
                     List<Item> items = cart.getItems();
             %>
             
-            <form action="update-cart" method="POST">
+            <form action="update-cart" method="POST" id="updateCartForm">
                 <table class="cart-table">
                     <thead>
                         <tr>
@@ -72,7 +67,7 @@
                                 <%= formatter.format(item.getProduct().getPrice()) %> D
                             </td>
                             <td class="product-quantity">
-                                <input type="number" name="quantity_<%= item.getProduct().getId() %>" value="<%= item.getQuantity() %>" min="1" max="<%= item.getProduct().getQuantity() %>">
+                                <input type="number" class="cart-quantity-input" name="quantity_<%= item.getProduct().getId() %>" value="<%= item.getQuantity() %>" min="1" max="<%= item.getProduct().getQuantity() %>">
                             </td>
                             <td class="product-subtotal">
                                 <%= formatter.format(item.getProduct().getPrice() * item.getQuantity()) %> ₫
@@ -81,7 +76,7 @@
                         <% } %>
                     </tbody>
                 </table>
-                <button type="submit" class="btn-detail" style="margin-top: 15px;">Cập nhật giỏ hàng</button>
+                <button type="submit" class="btn-detail" style="margin-top: 15px; display: none;">Cập nhật giỏ hàng</button>
             </form>
             
             <div class="cart-total">
@@ -104,6 +99,25 @@
             
         </div>
     </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Lấy form
+            const cartForm = document.getElementById('updateCartForm');
+            
+            // 2. Lấy TẤT CẢ các ô input số lượng
+            const quantityInputs = document.querySelectorAll('.cart-quantity-input');
+            
+            // 3. Thêm sự kiện "change" cho MỖI ô
+            quantityInputs.forEach(function(input) {
+                input.addEventListener('change', function() {
+                    // Khi người dùng thay đổi số lượng (và click ra ngoài),
+                    // tự động submit toàn bộ form
+                    cartForm.submit();
+                });
+            });
+        });
+    </SCRIpT>
     
     <%@ include file="WEB-INF/main-footer.jspf" %>
     

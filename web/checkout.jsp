@@ -21,17 +21,21 @@
     <%@ include file="WEB-INF/main-header.jspf" %>
     
     <%
-        // SỬA LỖI: Không khai báo lại 'acc' và 'cart'
+        // SỬA LỖI: Xóa khai báo "Account acc" và "Cart cart" bị trùng
+        // Các biến này đã được tạo trong main-header.jspf
         
+        // Chốt an toàn (Vì header đã tạo 'acc', ta chỉ cần kiểm tra 'cart')
         if (cart == null || cart.getItems().isEmpty()) {
-            response.sendRedirect("cart");
+            response.sendRedirect("cart"); // Nếu giỏ hàng trống, về trang giỏ
             return;
         }
         
         List<Item> items = cart.getItems();
         DecimalFormat formatter = new DecimalFormat("###,###,###");
+        
         String checkoutError = (String) request.getAttribute("checkoutError");
         
+        // Lấy thông tin có sẵn của user (biến 'acc' đã tồn tại)
         String defaultPhone = (acc.getPhone() != null) ? acc.getPhone() : "";
         String defaultAddress = (acc.getAddress() != null) ? acc.getAddress() : "";
     %>

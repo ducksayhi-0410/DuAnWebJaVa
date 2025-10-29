@@ -13,7 +13,8 @@
     
     <style>
         .success-container {
-            text-align: center; padding: 50px 20px; margin: 30px auto;
+            text-align: center;
+            padding: 50px 20px; margin: 30px auto;
             max-width: 600px; background: #f9f9f9; border: 1px solid #eee; border-radius: 8px;
         }
         .success-container i { font-size: 50px; color: #28a745; }
@@ -37,8 +38,9 @@
             
             <div class="success-actions">
                 <a href="products" class="btn-detail">Quay về trang chủ</a>
-                <a href="export-invoice?orderId=<%= (orderId != null) ? orderId : "" %>" 
-                   class="btn-checkout">Xuất hóa đơn (PDF)</a>
+                
+                <a href="export-bill?orderId=<%= (orderId != null) ? orderId : "" %>" 
+                   class="btn-checkout">Xuất biên lai (PDF)</a>
             </div>
         </div>
     </main>
