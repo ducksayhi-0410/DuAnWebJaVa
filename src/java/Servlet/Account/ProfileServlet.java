@@ -1,4 +1,4 @@
-package Servlet;
+package Servlet.Account;
 
 import java.io.IOException;
 import jakarta.servlet.ServletException;

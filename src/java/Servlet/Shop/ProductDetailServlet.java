@@ -1,4 +1,4 @@
-package Servlet;
+package Servlet.Shop;
 
 import Db.ProductDb;
 import Models.Product;

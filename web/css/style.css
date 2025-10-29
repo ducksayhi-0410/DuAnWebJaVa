@@ -1305,3 +1305,83 @@ main.container {
     font-weight: 500;
     margin-right: 10px;
 }
+/* === CSS CHO TRANG THANH TOÁN (CHECKOUT.JSP) === */
+.checkout-container {
+    display: flex;
+    flex-wrap: wrap; /* Cho responsive */
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.customer-details {
+    flex: 1.5; /* Chiếm 60% */
+    min-width: 300px;
+}
+
+.order-summary {
+    flex: 1; /* Chiếm 40% */
+    min-width: 300px;
+    background: #f9f9f9;
+    border: 1px solid #eee;
+    padding: 25px;
+    border-radius: 5px;
+    height: fit-content; /* Chỉ cao bằng nội dung */
+}
+
+.order-summary h2 {
+    margin-top: 0;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.order-table th, .order-table td {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.order-table th {
+    text-align: left;
+}
+
+.order-table td:last-child {
+    text-align: right;
+    font-weight: 500;
+}
+
+.order-table tr.total-row td {
+    font-size: 18px;
+    color: #a40000;
+    border-bottom: none;
+    padding-top: 15px;
+}
+
+.btn-checkout {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #a40000;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-checkout:hover {
+    background-color: #800000;
+}
+
+@media (max-width: 768px) {
+    .checkout-container {
+        flex-direction: column-reverse; /* Đảo ngược thứ tự trên di động */
+    }
+}

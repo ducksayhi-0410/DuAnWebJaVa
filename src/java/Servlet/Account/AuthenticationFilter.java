@@ -1,4 +1,4 @@
-package Servlet; // Hoặc package filter của bạn
+package Servlet.Account; // Hoặc package filter của bạn
 
 import Models.Account;
 import java.io.IOException;

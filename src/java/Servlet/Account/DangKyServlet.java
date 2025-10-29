@@ -1,4 +1,4 @@
-package Servlet;
+package Servlet.Account;
 
 import Db.AccountDb;
 import java.io.IOException;
