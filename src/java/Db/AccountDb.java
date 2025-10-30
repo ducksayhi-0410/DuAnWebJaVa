@@ -38,6 +38,23 @@ public class AccountDb {
         return null;
     }
     
+    public boolean checkStaffRole ( ) {
+        String sql = "SELECT * FROM accounts";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+             try (ResultSet rs = ps.executeQuery()) {
+                 while ( rs.next()) {
+                     if ( rs.getString("role") == "nhanvien") {
+                         return true;
+                     }
+                 }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi kiểm tra username: " + e.getMessage());
+        }
+        return false;
+        }
     // Phương thức 2: Kiểm tra USERNAME đã tồn tại
     public boolean checkUsernameExists(String username) {
         String sql = "SELECT COUNT(*) FROM accounts WHERE username = ?";
