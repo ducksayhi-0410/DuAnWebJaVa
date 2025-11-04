@@ -90,6 +90,7 @@
                                     <a href="employee-orders"><i class="fas fa-file-invoice"></i> Quản lý Đơn hàng</a>
                                     <a href="employee-products"><i class="fas fa-boxes"></i> Quản lý kho hàng</a>
                                     <a href="employee-attendance"><i class="fas fa-clock"></i> Chấm công</a>
+                                    <a href="admin-stats"><i class="fas fa-chart-line"></i> Thống kê Doanh thu</a>
                                     <div class="dropdown-divider"></div>
                                 <%
                                     }

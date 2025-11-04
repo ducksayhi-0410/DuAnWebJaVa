@@ -1,7 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%
-    // Servlet sẽ đặt 'activePage' (ví dụ: "profile", "edit", "password")
     String activePage = (String) request.getAttribute("activePage");
     if (activePage == null)
         activePage = "";
@@ -19,6 +18,13 @@
                 <span>Thông tin cá nhân</span>
             </a>
         </li>
+        
+        <li>
+            <a href="membership-perks" class="<%= "perks".equals(activePage) ? "active" : ""%>">
+                <i class="fas fa-gem"></i>
+                <span>Đặc quyền Thành viên</span>
+            </a>
+        </li>
         <li>
             <a href="edit-profile" class="<%= "edit".equals(activePage) ? "active" : ""%>">
                 <i class="fas fa-user-edit"></i>
@@ -32,16 +38,14 @@
             </a>
         </li>
         <li>
-            <a href="my-orders" class="<%= "orders".equals(activePage) ? "active" : ""%>">
-                <i class="fas fa-history"></i> <span>Lịch sử mua hàng</span> </a>
-        </li>
-        
-        <li>
             <a href="order-status" class="<%= "status".equals(activePage) ? "active" : ""%>">
                 <i class="fas fa-truck"></i> <span>Trạng thái Đơn hàng</span>
             </a>
         </li>
-      
+        <li>
+             <a href="my-orders" class="<%= "orders".equals(activePage) ? "active" : ""%>">
+                <i class="fas fa-history"></i> <span>Lịch sử mua hàng</span> </a>
+        </li>
         <li>
             <a href="logout">
                 <i class="fas fa-sign-out-alt"></i>

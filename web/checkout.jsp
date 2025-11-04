@@ -11,33 +11,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thanh toán</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
+    </head>
 <body>
 
     <%@ include file="WEB-INF/main-header.jspf" %>
     
     <%
-        // SỬA LỖI: Xóa khai báo "Account acc" và "Cart cart" bị trùng
-        // Các biến này đã được tạo trong main-header.jspf
-        
-        // Chốt an toàn (Vì header đã tạo 'acc', ta chỉ cần kiểm tra 'cart')
+        // (acc và cart đã được lấy từ main-header.jspf)
         if (cart == null || cart.getItems().isEmpty()) {
-            response.sendRedirect("cart"); // Nếu giỏ hàng trống, về trang giỏ
+            response.sendRedirect("cart");
             return;
         }
         
         List<Item> items = cart.getItems();
         DecimalFormat formatter = new DecimalFormat("###,###,###");
-        
         String checkoutError = (String) request.getAttribute("checkoutError");
         
-        // Lấy thông tin có sẵn của user (biến 'acc' đã tồn tại)
         String defaultPhone = (acc.getPhone() != null) ? acc.getPhone() : "";
         String defaultAddress = (acc.getAddress() != null) ? acc.getAddress() : "";
+        
+        // ==========================================================
+        // === LOGIC CHIẾT KHẤU MỚI ===
+        // ==========================================================
+        
+        // 1. Lấy tổng tiền gốc
+        double subtotal = cart.getTotalMoney();
+        
+        // 2. Xác định chiết khấu
+        String tier = acc.getCustomerTier();
+        String tierName = "Đồng";
+        double discountPercentage = 0;
+        
+        if ("kimcuong".equals(tier)) {
+            tierName = "Kim Cương";
+            discountPercentage = 0.1; // 10%
+        } else if ("vang".equals(tier)) {
+            tierName = "Vàng";
+            discountPercentage = 0.05; // 5%
+        } else if ("bac".equals(tier)) {
+            tierName = "Bạc";
+            discountPercentage = 0.02; // 2%
+        }
+        
+        // 3. Tính toán
+        double discountAmount = subtotal * discountPercentage;
+        double finalTotal = subtotal - discountAmount;
     %>
     
     <main class="container">
@@ -49,22 +67,21 @@
         
         <form action="place-order" method="POST">
             <div class="checkout-container">
+ 
                 <div class="customer-details">
-                    <h2>Thông tin khách hàng</h2>
+                    <h2>Thông tin khách hàng (Hạng: <%= tierName %>)</h2>
                     
                     <% if (checkoutError != null) { %>
-                        <div style="color: red; background: #ffe0e0; border: 1px solid red; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-                            <%= checkoutError %>
-                        </div>
+                         <div style="color: red; background: #ffe0e0;"><%= checkoutError %></div>
                     <% } %>
-
+                    
                     <div class="form-group">
                         <label for="fullname">Họ và Tên</label>
-                        <input type="text" id="fullname" name="fullname" value="<%= acc.getFullname() %>" required readonly style="background-color: #f0f0f0;">
+                        <input type="text" id="fullname" name="fullname" value="<%= acc.getFullname() %>" readonly>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="<%= acc.getEmail() %>" required readonly style="background-color: #f0f0f0;">
+                        <input type="email" id="email" name="email" value="<%= acc.getEmail() %>" readonly>
                     </div>
                     <div class="form-group">
                         <label for="phone">Số điện thoại giao hàng</label>
@@ -72,7 +89,7 @@
                     </div>
                     <div class="form-group">
                         <label for="address">Địa chỉ giao hàng</label>
-                        <input type="text" id="address" name="address" value="<%= defaultAddress %>" placeholder="Nhập địa chỉ của bạn..." required>
+                        <input type="text" id="address" name="address" value="<%= defaultAddress %>" required>
                     </div>
                 </div>
 
@@ -92,9 +109,22 @@
                                 <td><%= formatter.format(item.getProduct().getPrice() * item.getQuantity()) %> ₫</td>
                             </tr>
                             <% } %>
+                            
+                            <tr class="total-row" style="font-size: 16px; font-weight: normal;">
+                                <td><strong>Tạm tính</strong></td>
+                                <td><strong><%= formatter.format(subtotal) %> ₫</strong></td>
+                            </tr>
+                            
+                            <% if (discountAmount > 0) { %>
+                            <tr class="total-row" style="font-size: 16px; font-weight: normal; color: #a40000;">
+                                <td><strong>Chiết khấu (Hạng <%= tierName %> - <%= discountPercentage * 100 %>%)</strong></td>
+                                <td><strong>- <%= formatter.format(discountAmount) %> ₫</strong></td>
+                            </tr>
+                            <% } %>
+                            
                             <tr class="total-row">
                                 <td><strong>Tổng cộng</strong></td>
-                                <td><strong><%= formatter.format(cart.getTotalMoney()) %> ₫</strong></td>
+                                <td><strong><%= formatter.format(finalTotal) %> ₫</strong></td>
                             </tr>
                         </tbody>
                     </table>
@@ -111,6 +141,5 @@
     </main>
     
     <%@ include file="WEB-INF/main-footer.jspf" %>
-    
 </body>
 </html>

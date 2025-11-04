@@ -187,3 +187,48 @@
 .empty-status-message h3 {
     margin-top: 0;
 }
+.stats-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Chia 2 cột */
+            gap: 30px;
+        }
+        .stats-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 25px;
+            background-color: #fcfcfc;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Làm đẹp hơn */
+        }
+        .stats-card h2 {
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        /* (MỚI) Cho các thẻ rộng toàn màn hình */
+        .full-width {
+            grid-column: 1 / -1; 
+        }
+        
+        .total-revenue-card {
+            text-align: center;
+            background-color: #a40000;
+            color: white;
+            border: none;
+        }
+        .total-revenue-card h2 {
+            color: white;
+            border-bottom-color: #c43c3c;
+        }
+        .total-revenue-card .revenue-number {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .stats-list { list-style: none; padding: 0; margin: 0; }
+        .stats-list li { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f0f0f0; font-size: 15px; }
+        .stats-list li:last-child { border-bottom: none; }
+        .stats-list .item-name { font-weight: 500; color: #333; }
+        .stats-list .item-value { font-weight: bold; color: #a40000; }
