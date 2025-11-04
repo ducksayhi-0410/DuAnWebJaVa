@@ -8,13 +8,13 @@ import java.util.logging.Logger;
 
 public class DBContext {
     
-    // --- ĐÃ CẬP NHẬT TÊN DATABASE ---
-    private final String DB_URL = "jdbc:mysql://localhost:3306/qlruouvang?useSSL=false"; 
+    // === SỬA LỖI FONT: Thêm &characterEncoding=UTF-8 vào cuối ===
+    private final String DB_URL = "jdbc:mysql://localhost:3306/qlruouvang?useSSL=false&characterEncoding=UTF-8"; 
+    // ========================================================
+    
     private final String DB_USER = "root";
-    // Mật khẩu root của XAMPP mặc định là RỖNG ""
     private final String DB_PASSWORD = ""; 
     private final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
-    // --- KẾT THÚC CẬP NHẬT ---
 
     public Connection getConnection() {
         Connection conn = null;
@@ -24,7 +24,6 @@ public class DBContext {
             // 2. Mở kết nối
             conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
             
-            // Dòng này để kiểm tra kết nối thành công (bạn có thể xóa sau)
             System.out.println("Kết nối CSDL 'qlruouvang' thành công!"); 
             
         } catch (ClassNotFoundException | SQLException ex) {

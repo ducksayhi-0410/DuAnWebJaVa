@@ -76,7 +76,7 @@
                     <% if (topCustomers == null || topCustomers.isEmpty()) { %>
                         <li>Chưa có dữ liệu.</li>
                     <% } else {
-                        // Dòng này giờ sẽ hết lỗi
+                      
                         for (Account acc : topCustomers) { 
                             double totalSpent = Double.parseDouble(acc.getAddress());
                     %>

@@ -1,0 +1,189 @@
+/* ========================================
+   FILE: order-style.css
+   Mô tả: CSS riêng cho các trang
+   - employee-orders.jsp
+   - order-status.jsp
+   - my-orders.jsp
+   ======================================== */
+
+.order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #eee;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.order-card-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #a40000;
+}
+
+.order-card-header h3 span {
+    font-size: 14px;
+    color: #555;
+    font-weight: 400;
+}
+
+.order-status {
+    font-weight: bold;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* === YÊU CẦU MÀU SẮC MỚI (ĐÃ CẬP NHẬT) === */
+.order-status[data-status="Đang xác nhận"] { 
+    background-color: #ffc107; /* Vàng */
+    color: #333; 
+}
+.order-status[data-status="Đang chuẩn bị hàng"] { 
+    background-color: #ffc107; /* Vàng */
+    color: #333; 
+}
+.order-status[data-status="Đang giao hàng"] { 
+    background-color: #ffc107; /* Vàng */
+    color: #333; 
+}
+.order-status[data-status="Giao hàng thành công"] { 
+    background-color: #5cb85c; /* Xanh */
+    color: white; 
+}
+/* === KẾT THÚC CẬP NHẬT === */
+
+.order-card-body {
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Cột cho trang Admin/NV */
+.order-details-col {
+    flex: 2;
+    min-width: 300px;
+}
+.order-info-col {
+    flex: 1;
+    min-width: 250px;
+}
+.order-info-col p {
+    margin: 5px 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+.order-info-col p strong {
+    color: #333;
+}
+
+/* Cột cho trang Lịch sử (my-orders) */
+.order-shipping-info {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #ddd;
+    width: 100%; /* Đảm bảo nó chiếm đủ */
+}
+.order-shipping-info p {
+    margin: 5px 0;
+}
+
+
+.order-item-list {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.order-item-list th,
+.order-item-list td {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: left;
+    font-size: 14px;
+}
+
+.order-item-list th {
+    font-weight: 500;
+    color: #666;
+}
+
+.order-item-list tr:last-child td {
+    border-bottom: none;
+}
+
+.order-item-list .item-total {
+    font-weight: bold;
+    color: #a40000;
+    text-align: right;
+}
+
+.order-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #eee;
+}
+
+.order-card-footer .total-display span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #a40000;
+}
+
+/* Form cập nhật (chỉ có ở employee-orders.jsp) */
+.status-update-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.status-update-form select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.status-update-form .btn-submit-status {
+    padding: 8px 15px;
+    font-size: 14px;
+    background-color: #a40000;
+    color: white;
+    border: 1px solid #a40000;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Thông báo trống (chỉ có ở order-status.jsp) */
+.empty-status-message {
+    border: 1px dashed #ccc;
+    padding: 30px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.empty-status-message h3 {
+    margin-top: 0;
+}

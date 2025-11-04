@@ -33,7 +33,7 @@ public class EmployeeOrdersServlet extends HttpServlet {
         }
         
         OrderDb db = new OrderDb();
-        List<Order> allOrders = db.getAllOrders(); // Lấy TẤT CẢ đơn hàng
+        List<Order> allOrders = db.getAllOrders(); 
         
         request.setAttribute("allOrders", allOrders);
         request.getRequestDispatcher("employee-orders.jsp").forward(request, response);
@@ -42,6 +42,10 @@ public class EmployeeOrdersServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        // === THÊM DÒNG NÀY ĐỂ SỬA LỖI FONT KHI GỬI LÊN ===
+        request.setCharacterEncoding("UTF-8");
+        // ===============================================
         
         if (!checkPermission(request)) {
             response.sendRedirect("products");
@@ -53,7 +57,7 @@ public class EmployeeOrdersServlet extends HttpServlet {
             String newStatus = request.getParameter("status");
             
             OrderDb db = new OrderDb();
-            db.updateOrderStatus(orderId, newStatus); // Cập nhật trạng thái
+            db.updateOrderStatus(orderId, newStatus); 
             
         } catch (NumberFormatException e) {
             System.err.println("Lỗi parse ID đơn hàng: " + e.getMessage());

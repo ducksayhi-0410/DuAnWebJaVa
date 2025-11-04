@@ -28,119 +28,103 @@
 
             <div class="logo">
                 <a href="products" >
-                    <img  src="img/logo.png" alt="Logo">
+                <img  src="img/logo.png" alt="Logo">
                 </a>
             </div>
 
-
+        
             <form class="search-bar" action="products" method="GET">
                 <input type="text" name="searchQuery" placeholder="Nhập tên rượu..." value="<%= p_searchQuery%>">
                 <button type="submit"><i class="fas fa-search"></i></button>
                 <input type="hidden" name="categoryId" value="<%= p_categoryId%>">
                 <input type="hidden" name="minPrice" value="<%= p_minPrice%>">
-
+            
                 <input type="hidden" name="maxPrice" value="<%= p_maxPrice%>">
                 <input type="hidden" name="sort" value="<%= p_sort%>">
-
-
 
             </form>
 
             <div class="header-actions">
                 <%
-
                     // Lấy giỏ hàng từ session để đếm
                     Cart cart = (Cart) session.getAttribute("cart");
                     int totalCartItems = (cart == null) ? 0 : cart.getTotalItems();
                 %>
                 <a href="cart" class="header-btn">
-                    <i class="fas fa-shopping-cart"></i> GIỎ HÀNG (<%= totalCartItems%>)
+                    <i class="fas fa-shopping-cart"></i> GIỎ HÀNG (<%= totalCartItems %>)
                 </a>
                 <%
                     Account acc = (Account) session.getAttribute("acc");
                     if (acc == null) {
                 %>
-                <a href="DangNhap.jsp" class="header-btn user-login-btn">
-                    <i class="fas fa-user"></i> ĐĂNG NHẬP
-
-
-                </a>
+                        <a href="DangNhap.jsp" class="header-btn user-login-btn">
+                            <i class="fas fa-user"></i> ĐĂNG NHẬP
+                        </a>
                 <%
-                } else {
+                    } else {
                 %>
-                <div class="user-menu">
+                        <div class="user-menu">
+                
+                             <button class="header-btn user-menu-toggle">
+                                <i class="fas fa-user-circle"></i> 
+                               <span><%= acc.getUsername()%></span>
+                               <i class="fas fa-caret-down"></i>
+                             </button>
+      
+                             <div class="user-menu-dropdown">
+                           
+                                <%
+                                    String userRole = acc.getRole();
 
-                    <button class="header-btn user-menu-toggle">
-                        <i class="fas fa-user-circle"></i> 
-
-                        <span><%= acc.getUsername()%></span>
-
-                        <i class="fas fa-caret-down"></i>
-
-                    </button>
-
-                    <div class="user-menu-dropdown">
-
-
-                        <%
-                            // Lấy vai trò của người dùng
-                            String userRole = acc.getRole();
-
-                            // Hiển thị link dựa trên vai trò
-                            if ("admin".equals(userRole)) {
-                        %>
-                        <a href="admin-customers"><i class="fas fa-users"></i> Quản lý Tài khoản</a>
-                        <a href="admin-products"><i class="fas fa-boxes"></i> Quản lý kho hàng</a>
-
-                        <a href="employee-orders"><i class="fas fa-file-invoice"></i> Quản lý Đơn hàng</a>
-
-                        <a href="admin-stats"><i class="fas fa-chart-line"></i> Thống kê Doanh thu</a>
-                        <div class="dropdown-divider"></div>
-                        <%
-                        } else if ("nhanvien".equals(userRole)) {
-                        %>
-                        <a href="employee-orders"><i class="fas fa-file-invoice"></i> Quản lý Đơn hàng</a>
-
-                        <a href="employee-products"><i class="fas fa-boxes"></i> Quản lý kho hàng</a>
-                        <a href="employee-attendance"><i class="fas fa-clock"></i> Chấm công</a>
-                        <div class="dropdown-divider"></div>
-                        <%
-                            }
-                        %>
-
-                        <a href="profile"><i class="fas fa-user-edit"></i> Thông tin cá nhân</a>
-                        <a href="my-orders"><i class="fas fa-shopping-bag"></i> Lịch Sử Mua Hàng</a>
-                        <a href="logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
-                    </div>
-                </div>
-
-
-                <%
+                                    // Hiển thị link dựa trên vai trò
+                                    if ("admin".equals(userRole)) {
+                                %>
+                                    <a href="admin-customers"><i class="fas fa-users"></i> Quản lý Tài khoản</a>
+                                    <a href="admin-products"><i class="fas fa-boxes"></i> Quản lý kho hàng</a>
+                                    <a href="employee-orders"><i class="fas fa-file-invoice"></i> Quản lý Đơn hàng</a>
+                                    <a href="admin-stats"><i class="fas fa-chart-line"></i> Thống kê Doanh thu</a>
+                                    <div class="dropdown-divider"></div>
+                                <%
+                                    } else if ("nhanvien".equals(userRole)) {
+                                %>
+                                    <a href="employee-orders"><i class="fas fa-file-invoice"></i> Quản lý Đơn hàng</a>
+                                    <a href="employee-products"><i class="fas fa-boxes"></i> Quản lý kho hàng</a>
+                                    <a href="employee-attendance"><i class="fas fa-clock"></i> Chấm công</a>
+                                    <div class="dropdown-divider"></div>
+                                <%
+                                    }
+                                    // Các link chung cho tất cả (bao gồm cả 'customer')
+                                %>
+                                
+                                <a href="profile"><i class="fas fa-user-edit"></i> Thông tin cá nhân</a>
+                                <a href="my-orders"><i class="fas fa-shopping-bag"></i> Lịch Sử Mua Hàng</a>
+                                
+                                <%-- === DÒNG MỚI ĐƯỢC THÊM VÀO === --%>
+                                <a href="order-status"><i class="fas fa-truck"></i> Trạng thái Đơn hàng</a>
+                                
+                                <a href="logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                            </div>
+                        </div>
+                 <%
                     }
                 %>
             </div>
         </div>
     </div>
     <nav class="main-nav">
-        <div class="container">
-
-            <ul>
-
-                <li><a href="#">GIÁ TỐT</a></li>
+       <div class="container">
+             <ul>
+                 <li><a href="#">GIÁ TỐT</a></li>
                 <li><a href="#">QUÀ TẶNG</a></li>
                 <li><a href="#" class="active">RƯỢU VANG</a></li>
                 <li><a href="#">RƯỢU MẠNH</a></li>
-
                 <li><a href="#">LY PHA LÊ</a></li>
-
                 <li><a href="#">NƯỚC KHOÁNG</a></li>
                 <li><a href="#">SẢN PHẨM KHÁC</a></li>
                 <li><a href="#">NHÀ SẢN XUẤT</a></li>
                 <li><a href="#">KIẾN THỨC</a></li>
-
                 <li><a href="#">LIÊN HỆ</a></li>
             </ul>
         </div>
-
-    </nav>
+     </nav>
 </header>
