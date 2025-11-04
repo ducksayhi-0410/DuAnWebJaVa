@@ -143,4 +143,73 @@ public class ProductDb {
         }
         return null; // Trả về null nếu không tìm thấy
     }
+    public boolean addProduct(Product p) {
+        String sql = "INSERT INTO products (name, description, price, imageUrl, categoryId, quantity, manufacturer) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, p.getName());
+            ps.setString(2, p.getDescription());
+            ps.setDouble(3, p.getPrice());
+            ps.setString(4, p.getImageUrl());
+            ps.setInt(5, p.getCategoryId());
+            ps.setInt(6, p.getQuantity());
+            ps.setString(7, p.getManufacturer());
+            
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi thêm sản phẩm: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Cập nhật thông tin một sản phẩm dựa trên ID.
+     */
+    public boolean updateProduct(Product p) {
+        String sql = "UPDATE products SET name = ?, description = ?, price = ?, imageUrl = ?, " +
+                     "categoryId = ?, quantity = ?, manufacturer = ? WHERE id = ?";
+        
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, p.getName());
+            ps.setString(2, p.getDescription());
+            ps.setDouble(3, p.getPrice());
+            ps.setString(4, p.getImageUrl());
+            ps.setInt(5, p.getCategoryId());
+            ps.setInt(6, p.getQuantity());
+            ps.setString(7, p.getManufacturer());
+            ps.setInt(8, p.getId()); // ID ở cuối cùng
+            
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi cập nhật sản phẩm: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Xóa một sản phẩm khỏi cơ sở dữ liệu dựa trên ID.
+     */
+    public boolean deleteProduct(String productId) {
+        String sql = "DELETE FROM products WHERE id = ?";
+        
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, productId);
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            // Xử lý lỗi khóa ngoại (nếu sản phẩm đã có trong đơn hàng)
+            System.err.println("Lỗi khi xóa sản phẩm: " + e.getMessage());
+            return false;
+        }
+    }
 }
+    

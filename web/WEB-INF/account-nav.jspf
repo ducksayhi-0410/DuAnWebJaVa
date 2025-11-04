@@ -35,6 +35,13 @@
             <a href="my-orders" class="<%= "orders".equals(activePage) ? "active" : ""%>">
                 <i class="fas fa-history"></i> <span>Lịch sử mua hàng</span> </a>
         </li>
+        
+        <li>
+            <a href="order-status" class="<%= "status".equals(activePage) ? "active" : ""%>">
+                <i class="fas fa-truck"></i> <span>Trạng thái Đơn hàng</span>
+            </a>
+        </li>
+      
         <li>
             <a href="logout">
                 <i class="fas fa-sign-out-alt"></i>
