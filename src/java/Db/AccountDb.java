@@ -131,10 +131,45 @@ public class AccountDb {
     }
 
     public boolean changePassword(String username, String newPass) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "UPDATE accounts SET password=? WHERE username=?";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, newPass);
+            ps.setString(2, username);
+            
+            ps.executeUpdate();
+            
+            return ps.executeUpdate() > 0;
+           
+            
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi thay đổi password " + e.getMessage());
+        }
+        return false;
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public boolean updateProfile(String username, String fullname, String phone, String address) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "UPDATE accounts SET username=?, fullname=?, phone=?, address=? WHERE username=?";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, username);
+            ps.setString(2, fullname);
+            ps.setString(3, phone);
+            ps.setString(4, address);
+            ps.setString(5, username);
+            
+            ps.executeUpdate();
+            
+            return ps.executeUpdate() > 0;
+           
+            
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi thay đổi thông tin người dùng " + e.getMessage());
+        }
+        return false;
+        //throw new UnsupportedOperationException("Not supported yet"); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
