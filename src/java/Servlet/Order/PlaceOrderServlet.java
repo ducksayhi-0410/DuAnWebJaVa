@@ -1,8 +1,10 @@
 package Servlet.Order;
 
 import Db.OrderDb;
+import Db.VoucherDb; 
 import Models.Account;
 import Models.Cart;
+import Models.Voucher; 
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -32,42 +34,54 @@ public class PlaceOrderServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
         
-        // ==========================================================
-        // === TÍNH TOÁN LẠI CHIẾT KHẤU Ở SERVER (BẢO MẬT) ===
-        // ==========================================================
+        // === TÍNH TOÁN LẠI TẤT CẢ CHIẾT KHẤU Ở SERVER (ĐÃ CẬP NHẬT) ===
         
         double subtotal = cart.getTotalMoney();
-        double finalTotal = subtotal; // Mặc định
         
         String tier = acc.getCustomerTier();
-        double discountPercentage = 0;
+        double memberDiscountPercentage = 0;
+        if ("kimcuong".equals(tier)) memberDiscountPercentage = 0.1;
+        else if ("vang".equals(tier)) memberDiscountPercentage = 0.05;
+        else if ("bac".equals(tier)) memberDiscountPercentage = 0.02;
         
-        if ("kimcuong".equals(tier)) {
-            discountPercentage = 0.1; // 10%
-        } else if ("vang".equals(tier)) {
-            discountPercentage = 0.05; // 5%
-        } else if ("bac".equals(tier)) {
-            discountPercentage = 0.02; // 2%
+        double memberDiscountAmount = subtotal * memberDiscountPercentage;
+        double priceAfterMemberDiscount = subtotal - memberDiscountAmount;
+
+        Voucher voucher = (Voucher) session.getAttribute("appliedVoucher");
+        double voucherDiscountAmount = 0;
+        VoucherDb voucherDb = new VoucherDb();
+        
+        if (voucher != null) {
+            Voucher validVoucher = voucherDb.getValidVoucherByCode(voucher.getCode());
+            if (validVoucher != null && priceAfterMemberDiscount >= validVoucher.getMinOrderValue()) {
+                if ("percentage".equals(validVoucher.getDiscountType())) {
+                    voucherDiscountAmount = priceAfterMemberDiscount * (validVoucher.getDiscountValue() / 100.0);
+                } else {
+                    voucherDiscountAmount = validVoucher.getDiscountValue();
+                }
+            }
         }
         
-        if (discountPercentage > 0) {
-            finalTotal = subtotal * (1 - discountPercentage);
-        }
+        double finalTotal = priceAfterMemberDiscount - voucherDiscountAmount;
         
-        // ==========================================================
+        // === SỬA LỖI ÂM TIỀN (LOGIC SERVER) ===
+        if (finalTotal < 0) {
+            finalTotal = 0;
+        }
+        // ===================================
         
         OrderDb orderDb = new OrderDb();
-        
-        // Gọi hàm createOrder đã sửa (truyền finalTotal)
         int orderId = orderDb.createOrder(acc, cart, address, phone, finalTotal);
         
         if (orderId != -1) {
-            // Thành công
-            session.removeAttribute("cart"); // Xóa giỏ hàng
+            session.removeAttribute("cart"); 
+            if (voucher != null) {
+                session.removeAttribute("appliedVoucher");
+                voucherDb.incrementVoucherUsage(voucher.getCode());
+            }
             request.setAttribute("orderId", orderId);
             request.getRequestDispatcher("OrderSuccess.jsp").forward(request, response);
         } else {
-            // Thất bại
             request.setAttribute("checkoutError", "Đặt hàng thất bại, có lỗi CSDL. Vui lòng thử lại.");
             request.getRequestDispatcher("checkout.jsp").forward(request, response);
         }

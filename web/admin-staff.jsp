@@ -7,38 +7,7 @@
         <meta charset="UTF-8">
         <title>Quản lý Nhân viên</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-        <style>
-            .admin-container {
-                padding: 20px;
-                max-width: 1200px;
-                margin: 20px auto;
-            }
-            .admin-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 20px;
-            }
-            .admin-table th, .admin-table td {
-                border: 1px solid #ddd;
-                padding: 10px;
-                text-align: left;
-            }
-            .admin-table th {
-                background-color: #f5f5f5;
-            }
-            .admin-table .actions a {
-                margin-right: 10px;
-            }
-            .btn-add-new {
-                display: inline-block;
-                padding: 10px 15px;
-                background: #a40000;
-                color: white;
-                text-decoration: none;
-                border-radius: 5px;
-                font-weight: bold;
-            }
-        </style>
+       <link rel="stylesheet" href="css/admin-style.css">
     </head>
     <body>
         <div class="admin-container">

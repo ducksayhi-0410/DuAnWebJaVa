@@ -1,18 +1,27 @@
+<%@page import="java.util.List"%>
+<%@page import="Models.Category"%>
+<%@page import="Db.CategoryDb"%>
 <%@page import="Models.Account"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="Models.Cart"%>
 
 <%
+    // Khối code Java (đã sửa, không còn text linh tinh)
     String p_categoryId = (String) request.getAttribute("selectedCategoryId");
     String p_searchQuery = (String) request.getAttribute("currentSearchQuery");
     String p_minPrice = (String) request.getAttribute("currentMinPrice");
     String p_maxPrice = (String) request.getAttribute("currentMaxPrice");
     String p_sort = (String) request.getAttribute("currentSort");
+    
     p_categoryId = (p_categoryId == null) ? "" : p_categoryId;
     p_searchQuery = (p_searchQuery == null) ? "" : p_searchQuery;
     p_minPrice = (p_minPrice == null) ? "" : p_minPrice;
     p_maxPrice = (p_maxPrice == null) ? "" : p_maxPrice;
     p_sort = (p_sort == null) ? "" : p_sort;
+    
+    // Tải danh sách danh mục
+    CategoryDb navCategoryDb = new CategoryDb();
+    List<Category> navCategoryList = navCategoryDb.getAllCategories();
 %>
 
 <script>
@@ -38,15 +47,12 @@
                 <button type="submit"><i class="fas fa-search"></i></button>
                 <input type="hidden" name="categoryId" value="<%= p_categoryId%>">
                 <input type="hidden" name="minPrice" value="<%= p_minPrice%>">
-            
                 <input type="hidden" name="maxPrice" value="<%= p_maxPrice%>">
                 <input type="hidden" name="sort" value="<%= p_sort%>">
-
             </form>
 
             <div class="header-actions">
                 <%
-                    // Lấy giỏ hàng từ session để đếm
                     Cart cart = (Cart) session.getAttribute("cart");
                     int totalCartItems = (cart == null) ? 0 : cart.getTotalItems();
                 %>
@@ -64,29 +70,26 @@
                     } else {
                 %>
                         <div class="user-menu">
-                
                              <button class="header-btn user-menu-toggle">
                                 <i class="fas fa-user-circle"></i> 
                                <span><%= acc.getUsername()%></span>
                                <i class="fas fa-caret-down"></i>
                              </button>
-      
                              <div class="user-menu-dropdown">
-                           
                                 <%
                                     String userRole = acc.getRole();
-
-                                    // Hiển thị link dựa trên vai trò
                                     if ("admin".equals(userRole)) {
                                 %>
                                     <a href="admin-customers"><i class="fas fa-users"></i> Quản lý Tài khoản</a>
                                     <a href="admin-products"><i class="fas fa-boxes"></i> Quản lý kho hàng</a>
                                     <a href="employee-orders"><i class="fas fa-file-invoice"></i> Quản lý Đơn hàng</a>
                                     <a href="admin-stats"><i class="fas fa-chart-line"></i> Thống kê Doanh thu</a>
+                                    <a href="admin-vouchers"><i class="fas fa-tags"></i> Quản lý Mã giảm giá</a>
                                     <div class="dropdown-divider"></div>
                                 <%
                                     } else if ("nhanvien".equals(userRole)) {
                                 %>
+                                    <a href="admin-vouchers"><i class="fas fa-tags"></i> Quản lý Mã giảm giá</a>
                                     <a href="employee-orders"><i class="fas fa-file-invoice"></i> Quản lý Đơn hàng</a>
                                     <a href="employee-products"><i class="fas fa-boxes"></i> Quản lý kho hàng</a>
                                     <a href="employee-attendance"><i class="fas fa-clock"></i> Chấm công</a>
@@ -94,37 +97,48 @@
                                     <div class="dropdown-divider"></div>
                                 <%
                                     }
-                                    // Các link chung cho tất cả (bao gồm cả 'customer')
                                 %>
-                                
                                 <a href="profile"><i class="fas fa-user-edit"></i> Thông tin cá nhân</a>
                                 <a href="my-orders"><i class="fas fa-shopping-bag"></i> Lịch Sử Mua Hàng</a>
-                                
-                                <%-- === DÒNG MỚI ĐƯỢC THÊM VÀO === --%>
                                 <a href="order-status"><i class="fas fa-truck"></i> Trạng thái Đơn hàng</a>
-                                
                                 <a href="logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
                             </div>
-                        </div>
+                         </div>
                  <%
                     }
                 %>
             </div>
         </div>
     </div>
+    
     <nav class="main-nav">
        <div class="container">
              <ul>
-                 <li><a href="#">GIÁ TỐT</a></li>
-                <li><a href="#">QUÀ TẶNG</a></li>
-                <li><a href="#" class="active">RƯỢU VANG</a></li>
-                <li><a href="#">RƯỢU MẠNH</a></li>
-                <li><a href="#">LY PHA LÊ</a></li>
-                <li><a href="#">NƯỚC KHOÁNG</a></li>
-                <li><a href="#">SẢN PHẨM KHÁC</a></li>
-                <li><a href="#">NHÀ SẢN XUẤT</a></li>
-                <li><a href="#">KIẾN THỨC</a></li>
-                <li><a href="#">LIÊN HỆ</a></li>
+                
+                 
+                 <%-- Vòng lặp động tải các danh mục --%>
+                 <% 
+                     if (navCategoryList != null && !navCategoryList.isEmpty()) {
+                         for (Category c : navCategoryList) {
+                             String isActive = String.valueOf(c.getId()).equals(p_categoryId) ? "active" : "";
+                 %>
+                             <li>
+                                 <a href="products?categoryId=<%= c.getId() %>" class="<%= isActive %>">
+                                     <%= c.getName() %>
+                                 </a>
+                             </li>
+                 <%
+                         }
+                     }
+                 %>
+                 <%-- Kết thúc vòng lặp động --%>
+                 
+                 <li><a href="#">NHÀ SẢN XUẤT</a></li>
+                 <li><a href="#">KIẾN THỨC</a></li>
+                 
+                 <li>
+                     <a href="https://web.facebook.com/ducksayhiii?locale=vi_VN" target="_blank">LIÊN HỆ</a>
+                 </li>
             </ul>
         </div>
      </nav>

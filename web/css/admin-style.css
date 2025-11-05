@@ -1,0 +1,242 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Nov 4, 2025, 6:40:29 PM
+    Author     : dxduc
+*/
+
+/* ========================================
+   FILE: admin-style.css
+   Mô tả: CSS chung cho các trang Quản trị (Admin)
+   ======================================== */
+
+/* === 1. LAYOUT CHUNG === */
+.admin-container {
+    display: flex;
+    gap: 30px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+/* Cột bên trái (Form) */
+.admin-form-section {
+    width: 35%;
+    border: 1px solid #eee;
+    padding: 20px;
+    border-radius: 5px;
+    height: fit-content;
+}
+
+/* Cột bên phải (Danh sách) */
+.admin-list-section {
+    width: 65%;
+}
+
+/* === 2. KHỐI FORM (THÊM/SỬA) === */
+.admin-form-section h2 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.admin-form-section .form-group {
+    margin-bottom: 15px;
+}
+
+.admin-form-section .form-group label {
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+
+.admin-form-section .form-group input,
+.admin-form-section .form-group select,
+.admin-form-section .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.admin-form-section .form-group textarea {
+    min-height: 80px;
+}
+
+.admin-form-section .btn-submit {
+    padding: 10px 20px;
+    font-size: 14px;
+    /* (Các style nút submit chung đã có trong style.css) */
+}
+
+.btn-clear-form {
+    text-decoration: none;
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 13px;
+}
+
+/* CSS cho form sản phẩm */
+.image-or-divider {
+    text-align: center;
+    font-weight: bold;
+    color: #777;
+    margin: 10px 0;
+    font-size: 12px;
+}
+
+/* CSS cho form chia cột */
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+.form-row .form-group {
+    flex: 1;
+}
+
+/* === 3. KHỐI BẢNG (DANH SÁCH) === */
+.admin-list-table,
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 20px;
+}
+
+.admin-list-table th, .admin-list-table td,
+.admin-table th, .admin-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.admin-list-table th,
+.admin-table th {
+    background-color: #f5f5f5;
+}
+
+/* Ảnh sản phẩm trong bảng */
+.admin-list-table img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+/* Các icon hành động (Sửa, Xóa, Xem) */
+.admin-list-table .action-links a,
+.admin-table .actions a {
+    margin-right: 10px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.action-links .link-delete {
+    color: #d9534f;
+}
+.action-links .link-edit {
+    color: #0275d8;
+}
+.action-links .link-view {
+    color: #5cb85c;
+}
+
+/* Nút "Thêm nhân viên" từ admin-staff.jsp */
+.btn-add-new {
+    display: inline-block;
+    padding: 10px 15px;
+    background: #a40000;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+
+/* === 4. KHỐI LỊCH SỬ ĐƠN HÀNG (TRONG admin-customers.jsp) === */
+.history-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #a40000;
+}
+
+/* (Các style này được dùng chung với order-style.css,
+   nhưng tôi thêm vào đây để đảm bảo tính độc lập
+   nếu bạn xóa style inline trong admin-customers.jsp) */
+
+.order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.order-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #fff;
+    overflow: hidden;
+}
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #eee;
+}
+.order-card-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #a40000;
+}
+.order-card-header span {
+    font-size: 14px;
+    color: #555;
+    font-weight: 400;
+}
+.order-status {
+    font-weight: bold;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #e0e0e0;
+    color: #333;
+}
+.order-card-body {
+    padding: 20px;
+}
+.order-item-list {
+    width: 100%;
+    border-collapse: collapse;
+}
+.order-item-list th, .order-item-list td {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: left;
+    font-size: 14px;
+}
+.order-item-list th {
+    font-weight: 500;
+    color: #666;
+}
+.order-item-list tr:last-child td {
+    border-bottom: none;
+}
+.order-item-list .item-total {
+    font-weight: bold;
+    color: #a40000;
+    text-align: right;
+}
+.order-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #eee;
+}
+.order-card-footer span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #a40000;
+}

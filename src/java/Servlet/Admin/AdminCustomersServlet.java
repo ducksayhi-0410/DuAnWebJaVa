@@ -16,9 +16,7 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet(name = "AdminCustomersServlet", urlPatterns = {"/admin-customers"})
 public class AdminCustomersServlet extends HttpServlet {
 
-    /**
-     * Kiểm tra quyền Admin
-     */
+    // (Giữ nguyên hàm checkAdmin)
     private boolean checkAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null) return false;
@@ -30,6 +28,10 @@ public class AdminCustomersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        // === THÊM DÒNG NÀY ĐỂ SỬA LỖI FONT KHI NHẬN ===
+        request.setCharacterEncoding("UTF-8");
+        // ===========================================
         
         if (!checkAdmin(request)) {
             response.sendRedirect("products");
@@ -43,27 +45,20 @@ public class AdminCustomersServlet extends HttpServlet {
         if (action != null) {
             switch (action) {
                 case "edit":
-                    // Tải thông tin tài khoản lên form Sửa
                     Account accToEdit = accountDb.getAccountByUsername(username);
                     request.setAttribute("accountToEdit", accToEdit);
                     break;
-                    
                 case "delete":
-                    // Xử lý xóa tài khoản
                     handleDelete(request, response, accountDb, username);
-                    return; // Chuyển hướng trong hàm con
-
+                    return; 
                 case "viewHistory":
-                    // Xem lịch sử (giữ nguyên)
                     loadHistory(request, username);
                     break;
             }
         }
         
-        // Luôn luôn tải danh sách tài khoản
         List<Account> allAccounts = accountDb.getAllAccounts();
         request.setAttribute("allAccounts", allAccounts);
-        
         request.getRequestDispatcher("admin-customers.jsp").forward(request, response);
     }
 
@@ -71,12 +66,15 @@ public class AdminCustomersServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        // === THÊM DÒNG NÀY ĐỂ SỬA LỖI FONT KHI GỬI ===
+        request.setCharacterEncoding("UTF-8");
+        // =========================================
+        
         if (!checkAdmin(request)) {
             response.sendRedirect("products");
             return;
         }
         
-        request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         AccountDb accountDb = new AccountDb();
         
@@ -94,9 +92,8 @@ public class AdminCustomersServlet extends HttpServlet {
         response.sendRedirect("admin-customers");
     }
     
-    /**
-     * Tải lịch sử đơn hàng (cho action=viewHistory)
-     */
+    // (Giữ nguyên các hàm loadHistory, handleDelete, handleAdd, handleUpdate)
+    // ...
     private void loadHistory(HttpServletRequest request, String username) {
         if (username != null) {
             OrderDb orderDb = new OrderDb();
@@ -105,87 +102,68 @@ public class AdminCustomersServlet extends HttpServlet {
             request.setAttribute("viewingUser", username); 
         }
     }
-    
-    /**
-     * Xử lý xóa
-     */
     private void handleDelete(HttpServletRequest request, HttpServletResponse response, AccountDb db, String username) 
             throws IOException {
-        
         HttpSession session = request.getSession();
         Account adminAcc = (Account) session.getAttribute("acc");
-
-        // Bảo vệ: Không cho admin tự xóa mình
         if (adminAcc.getUsername().equals(username)) {
             session.setAttribute("adminError", "Bạn không thể tự xóa tài khoản của mình!");
         } else {
             boolean success = db.deleteAccount(username);
             if (!success) {
-                session.setAttribute("adminError", "Xóa thất bại! (Có thể tài khoản này đã có đơn hàng).");
+                session.setAttribute("adminError", "Xóa thất bại! Đã xảy ra lỗi CSDL.");
             }
         }
         response.sendRedirect("admin-customers");
     }
-    
-    /**
-     * Xử lý thêm
-     */
     private void handleAdd(HttpServletRequest request, HttpServletResponse response, AccountDb db) {
         HttpSession session = request.getSession();
         String username = request.getParameter("username");
         String email = request.getParameter("email");
-        
-        // 1. Kiểm tra tồn tại
         if (db.checkUsernameExists(username)) {
             session.setAttribute("adminError", "Thêm thất bại! Tên đăng nhập '" + username + "' đã tồn tại.");
             return;
         }
         if (db.checkEmailExists(email)) {
-            session.setAttribute("adminError", "Thêm thất bại! Email '" + email + "' đã tồn tại.");
+            session.setAttribute("adminError", "Thêm thất bại! Email '" + email + "' đã tồn Tạ.");
             return;
         }
-        
-        // 2. Tạo tài khoản
-        Account acc = new Account(
-            username, 
-            request.getParameter("password"), 
-            request.getParameter("role"), 
-            request.getParameter("fullname"), 
-            request.getParameter("phone"), 
-            null, // Address
-            email
-        );
-        
-        db.addAccount(acc);
+        try {
+            String spendParam = request.getParameter("lifetime_spend");
+            double lifetimeSpend = (spendParam == null || spendParam.isEmpty()) ? 0 : Double.parseDouble(spendParam);
+            Account acc = new Account(
+                username, request.getParameter("password"), request.getParameter("role"), 
+                request.getParameter("fullname"), request.getParameter("phone"), 
+                request.getParameter("address"), email,
+                request.getParameter("customer_tier"), lifetimeSpend
+            );
+            db.addAccount(acc);
+        } catch (NumberFormatException e) {
+            session.setAttribute("adminError", "Thêm thất bại! Tổng chi tiêu phải là một con số.");
+        }
     }
-    
-    /**
-     * Xử lý cập nhật
-     */
     private void handleUpdate(HttpServletRequest request, HttpServletResponse response, AccountDb db) {
         HttpSession session = request.getSession();
-        String username = request.getParameter("username"); // Username không đổi
+        String username = request.getParameter("username"); 
         Account adminAcc = (Account) session.getAttribute("acc");
-        
-        // Bảo vệ: Không cho admin tự sửa vai trò của mình
         if (adminAcc.getUsername().equals(username) && !adminAcc.getRole().equals(request.getParameter("role"))) {
             session.setAttribute("adminError", "Bạn không thể tự thay đổi vai trò của mình!");
             return;
         }
-
         String password = request.getParameter("password");
         boolean updatePassword = (password != null && !password.isEmpty());
-
-        Account acc = new Account(
-            username, 
-            password, // Sẽ được bỏ qua nếu trống
-            request.getParameter("role"), 
-            request.getParameter("fullname"), 
-            request.getParameter("phone"),
-            request.getParameter("address"), // Thêm address
-            request.getParameter("email")
-        );
-        
-        db.updateAccount(acc, updatePassword);
+        try {
+            String spendParam = request.getParameter("lifetime_spend");
+            double lifetimeSpend = (spendParam == null || spendParam.isEmpty()) ? 0 : Double.parseDouble(spendParam);
+            Account acc = new Account(
+                username, password, request.getParameter("role"), 
+                request.getParameter("fullname"), request.getParameter("phone"),
+                request.getParameter("address"), request.getParameter("email"),
+                request.getParameter("customer_tier"), lifetimeSpend
+            );
+            db.updateAccount(acc, updatePassword);
+        } catch (NumberFormatException e) {
+            session.setAttribute("adminError", "Cập nhật thất bại! Tổng chi tiêu phải là một con số.");
+        }
     }
 }

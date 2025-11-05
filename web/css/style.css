@@ -1497,3 +1497,34 @@ main.container {
             display: flex;
             justify-content: space-between;
         }
+        .voucher-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .voucher-form input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .voucher-form button {
+            padding: 10px 15px;
+            font-weight: bold;
+            border: 1px solid #a40000;
+            background-color: #a40000;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .voucher-form button:disabled {
+            background-color: #ccc;
+            border-color: #ccc;
+            cursor: not-allowed;
+        }
+        #voucher-message {
+            font-size: 13px;
+            margin-top: 10px;
+        }
+        #voucher-message.success { color: green; }
+        #voucher-message.error { color: red; }

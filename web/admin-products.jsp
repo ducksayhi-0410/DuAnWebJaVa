@@ -9,34 +9,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Kho hàng & Danh mục</title>
+    <link rel="stylesheet" href="css/admin-style.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* (Giữ nguyên CSS cũ) */
-        .admin-container { display: flex; gap: 30px; }
-        .admin-form-section { width: 35%; border: 1px solid #eee; padding: 20px; border-radius: 5px; height: fit-content; }
-        .admin-list-section { width: 65%; }
-        .admin-form-section h2 { margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid #eee; }
-        .admin-form-section .form-group { margin-bottom: 15px; }
-        .admin-form-section .form-group label { margin-bottom: 5px; font-size: 13px; }
-        .admin-form-section .form-group input,
-        .admin-form-section .form-group select,
-        .admin-form-section .form-group textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
-        .admin-form-section .form-group textarea { min-height: 80px; }
-        .admin-form-section .btn-submit { padding: 10px 20px; font-size: 14px; }
-        .admin-list-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .admin-list-table th, .admin-list-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        .admin-list-table th { background-color: #f5f5f5; }
-        .admin-list-table img { width: 50px; height: 50px; object-fit: cover; }
-        .admin-list-table .action-links a { margin-right: 10px; font-weight: bold; }
-        .action-links .link-delete { color: #d9534f; }
-        .action-links .link-edit { color: #0275d8; }
-        .btn-clear-form { text-decoration: none; display: inline-block; margin-left: 10px; font-size: 13px; }
-        .image-or-divider { text-align: center; font-weight: bold; color: #777; margin: 10px 0; font-size: 12px; }
-    </style>
+
 </head>
 <body>
     
