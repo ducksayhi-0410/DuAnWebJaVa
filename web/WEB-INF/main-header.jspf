@@ -6,42 +6,53 @@
 <%@page import="Models.Cart"%>
 
 <%
-    // Khối code Java (đã sửa, không còn text linh tinh)
+    // --- KHỐI JAVA (Giữ nguyên) ---
     String p_categoryId = (String) request.getAttribute("selectedCategoryId");
     String p_searchQuery = (String) request.getAttribute("currentSearchQuery");
     String p_minPrice = (String) request.getAttribute("currentMinPrice");
     String p_maxPrice = (String) request.getAttribute("currentMaxPrice");
     String p_sort = (String) request.getAttribute("currentSort");
-    
     p_categoryId = (p_categoryId == null) ? "" : p_categoryId;
     p_searchQuery = (p_searchQuery == null) ? "" : p_searchQuery;
     p_minPrice = (p_minPrice == null) ? "" : p_minPrice;
     p_maxPrice = (p_maxPrice == null) ? "" : p_maxPrice;
     p_sort = (p_sort == null) ? "" : p_sort;
-    
-    // Tải danh sách danh mục
+
     CategoryDb navCategoryDb = new CategoryDb();
     List<Category> navCategoryList = navCategoryDb.getAllCategories();
 %>
 
 <script>
-    var contextPath = "${pageContext.request.contextPath}";
+    var contextPath = "<%= request.getContextPath() %>";
 </script>
+
 <header>
+    
+    
     <div class="top-bar">
         <div class="container">
+            <div class="top-bar-content">
+                <span>
+                    <i class="fas fa-phone"></i> Hotline: 0584891113
+                </span>
+                <span class="top-bar-divider">|</span>
+                <span>
+                    <i class="fas fa-envelope"></i> Email: info@uneti.com
+                </span>
+            </div>
         </div>
     </div>
+    
+    
     <div class="main-header">
         <div class="container">
 
             <div class="logo">
-                <a href="products" >
-                <img  src="img/logo.png" alt="Logo">
+                <a href="products">
+                    <img src="img/logo.png" alt="Logo">
                 </a>
             </div>
 
-        
             <form class="search-bar" action="products" method="GET">
                 <input type="text" name="searchQuery" placeholder="Nhập tên rượu..." value="<%= p_searchQuery%>">
                 <button type="submit"><i class="fas fa-search"></i></button>
@@ -52,94 +63,79 @@
             </form>
 
             <div class="header-actions">
+                
                 <%
                     Cart cart = (Cart) session.getAttribute("cart");
                     int totalCartItems = (cart == null) ? 0 : cart.getTotalItems();
                 %>
                 <a href="cart" class="header-btn">
-                    <i class="fas fa-shopping-cart"></i> GIỎ HÀNG (<%= totalCartItems %>)
+                    <i class="fas fa-shopping-cart"></i> GIỎ HÀNG (<%= totalCartItems%>)
                 </a>
+                
                 <%
                     Account acc = (Account) session.getAttribute("acc");
                     if (acc == null) {
                 %>
-                        <a href="DangNhap.jsp" class="header-btn user-login-btn">
-                            <i class="fas fa-user"></i> ĐĂNG NHẬP
-                        </a>
+                <a href="DangNhap.jsp" class="header-btn user-login-btn">
+                    <i class="fas fa-user"></i> ĐĂNG NHẬP
+                </a>
                 <%
                     } else {
                 %>
-                        <div class="user-menu">
-                             <button class="header-btn user-menu-toggle">
-                                <i class="fas fa-user-circle"></i> 
-                               <span><%= acc.getUsername()%></span>
-                               <i class="fas fa-caret-down"></i>
-                             </button>
-                             <div class="user-menu-dropdown">
-                                <%
-                                    String userRole = acc.getRole();
-                                    if ("admin".equals(userRole)) {
-                                %>
-                                    <a href="admin-customers"><i class="fas fa-users"></i> Quản lý Tài khoản</a>
-                                    <a href="admin-products"><i class="fas fa-boxes"></i> Quản lý kho hàng</a>
-                                    <a href="employee-orders"><i class="fas fa-file-invoice"></i> Quản lý Đơn hàng</a>
-                                    <a href="admin-stats"><i class="fas fa-chart-line"></i> Thống kê Doanh thu</a>
-                                    <a href="admin-vouchers"><i class="fas fa-tags"></i> Quản lý Mã giảm giá</a>
-                                    <div class="dropdown-divider"></div>
-                                <%
-                                    } else if ("nhanvien".equals(userRole)) {
-                                %>
-                                    <a href="admin-vouchers"><i class="fas fa-tags"></i> Quản lý Mã giảm giá</a>
-                                    <a href="employee-orders"><i class="fas fa-file-invoice"></i> Quản lý Đơn hàng</a>
-                                    <a href="employee-products"><i class="fas fa-boxes"></i> Quản lý kho hàng</a>
-                                    <a href="employee-attendance"><i class="fas fa-clock"></i> Chấm công</a>
-                                    <a href="admin-stats"><i class="fas fa-chart-line"></i> Thống kê Doanh thu</a>
-                                    <div class="dropdown-divider"></div>
-                                <%
-                                    }
-                                %>
-                                <a href="profile"><i class="fas fa-user-edit"></i> Thông tin cá nhân</a>
-                                <a href="my-orders"><i class="fas fa-shopping-bag"></i> Lịch Sử Mua Hàng</a>
-                                <a href="order-status"><i class="fas fa-truck"></i> Trạng thái Đơn hàng</a>
-                                <a href="logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
-                            </div>
-                         </div>
-                 <%
+                <div class="user-menu">
+                    <button class="header-btn user-menu-toggle">
+                        <i class="fas fa-user-circle"></i> 
+                        <span><%= acc.getUsername()%></span>
+                        <i class="fas fa-caret-down"></i>
+                    </button>
+                    <div class="user-menu-dropdown">
+                        <%
+                            String userRole = acc.getRole();
+                            if ("admin".equals(userRole)) {
+                        %>
+                        <a href="admin-customers"><i class="fas fa-users"></i> Quản lý Tài khoản</a>
+                        <a href="admin-products"><i class="fas fa-boxes"></i> Quản lý kho hàng</a>
+                        <a href="employee-orders"><i class="fas fa-file-invoice"></i> Quản lý Đơn hàng</a>
+                        <a href="admin-stats"><i class="fas fa-chart-line"></i> Thống kê Doanh thu</a>
+                        <a href="admin-vouchers"><i class="fas fa-tags"></i> Quản lý Mã giảm giá</a>
+                        <div class="dropdown-divider"></div>
+                        <%
+                        } else if ("nhanvien".equals(userRole)) {
+                        %>
+                        <a href="admin-vouchers"><i class="fas fa-tags"></i> Quản lý Mã giảm giá</a>
+                        <a href="employee-orders"><i class="fas fa-file-invoice"></i> Quản lý Đơn hàng</a>
+                        <a href="employee-products"><i class="fas fa-boxes"></i> Quản lý kho hàng</a>
+                        <a href="admin-stats"><i class="fas fa-chart-line"></i> Thống kê Doanh thu</a>
+                        <div class="dropdown-divider"></div>
+                        <%
+                            }
+                        %>
+                        <a href="profile"><i class="fas fa-user-edit"></i> Thông tin cá nhân</a>
+                        <a href="my-orders"><i class="fas fa-shopping-bag"></i> Lịch Sử Mua Hàng</a>
+                        <a href="order-status"><i class="fas fa-truck"></i> Trạng thái Đơn hàng</a>
+                        <a href="logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                    </div>
+                </div>
+                <%
                     }
                 %>
             </div>
         </div>
     </div>
     
-    <nav class="main-nav">
-       <div class="container">
-             <ul>
-                
-                 
-                 <%-- Vòng lặp động tải các danh mục --%>
-                 <% 
-                     if (navCategoryList != null && !navCategoryList.isEmpty()) {
-                         for (Category c : navCategoryList) {
-                             String isActive = String.valueOf(c.getId()).equals(p_categoryId) ? "active" : "";
-                 %>
-                             <li>
-                                 <a href="products?categoryId=<%= c.getId() %>" class="<%= isActive %>">
-                                     <%= c.getName() %>
-                                 </a>
-                             </li>
-                 <%
-                         }
-                     }
-                 %>
-                 <%-- Kết thúc vòng lặp động --%>
-                 
-                 <li><a href="#">NHÀ SẢN XUẤT</a></li>
-                 <li><a href="#">KIẾN THỨC</a></li>
-                 
-                 <li>
-                     <a href="https://web.facebook.com/ducksayhiii?locale=vi_VN" target="_blank">LIÊN HỆ</a>
-                 </li>
-            </ul>
-        </div>
-     </nav>
-</header>
+</header> 
+
+<div class="quick-contact-bar">
+    <a href="tel:0584891113" class="contact-item">
+        <i class="fas fa-phone"></i>
+        <span>Hotline</span>
+    </a>
+    <a href="httpsZalo.me/0987654321" target="_blank" class="contact-item">
+        <img src="img/zalo-logo.png" alt="Zalo" class="contact-icon-img">
+        <span>Zalo</span>
+    </a>
+    <a href="https://m.me/ten-trang-facebook-cua-ban" target="_blank" class="contact-item">
+        <i class="fab fa-facebook-messenger"></i>
+        <span>Messenger</span>
+    </a>
+</div>

@@ -8,7 +8,7 @@ public class Product {
     private String imageUrl;
     private int categoryId;
     private int quantity;
-    private String manufacturer; // <-- THÊM DÒNG NÀY
+    private String manufacturer; 
 
     // Constructors
     public Product() {
@@ -101,7 +101,7 @@ public class Product {
                 ", price=" + price +
                 ", categoryId=" + categoryId +
                 ", quantity=" + quantity +
-                ", manufacturer='" + manufacturer + '\'' + // <-- THÊM DÒNG NÀY
+                ", manufacturer='" + manufacturer + '\'' + 
                 '}';
     }
 }

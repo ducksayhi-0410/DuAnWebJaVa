@@ -1,22 +1,65 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <footer class="main-footer">
-    <div class="container footer-content">
-        <div class="footer-links">
-            <a href="#">Về chúng tôi</a>
-            <a href="#">Chính sách bảo mật</a>
-            <a href="#">Điều khoản dịch vụ</a>
-            <a href="#">Liên hệ</a>
+    <div class="container">
+        <div class="footer-content-grid">
+            
+            <div class="footer-column">
+                <h4>Về Rượu Vang UNETI</h4>
+                <p>Chuyên cung cấp các loại rượu vang, rượu mạnh, và đồ uống cao cấp. Cam kết chất lượng và xuất xứ rõ ràng.</p>
+                <ul class="footer-contact-list">
+                    <li>
+                        <i class="fas fa-map-marker-alt"></i> 
+                        <strong>Địa chỉ:</strong> Hà Nội
+                    </li>
+                    <li>
+                        <i class="fas fa-phone"></i> 
+                        <strong>Hotline:</strong> 0987.654.321
+                    </li>
+                    <li>
+                        <i class="fas fa-envelope"></i> 
+                        <strong>Email:</strong> info@uneti.com
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Liên kết nhanh</h4>
+                <ul class="footer-quick-links">
+                    <li><a href="#">Về chúng tôi</a></li>
+                    <li><a href="#">Chính sách bảo mật</a></li>
+                    <li><a href="#">Điều khoản dịch vụ</a></li>
+                    <li><a href="#">Liên hệ</a></li>
+                    <li><a href="#">Hỏi đáp (FAQ)</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Kết nối với chúng tôi</h4>
+                <p>Theo dõi chúng tôi trên các nền tảng mạng xã hội để cập nhật ưu đãi mới nhất.</p>
+                <div class="footer-social-icons">
+                    <a href="https://www.facebook.com/ducksayhiii" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" target="_blank" title="Zalo"><i class="fas fa-comment"></i></a> </div>
+                
+                <h4 class="footer-subscribe-title">Đăng ký nhận tin</h4>
+                <form class="footer-subscribe-form">
+                    <input type="email" placeholder="Nhập email của bạn...">
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+
         </div>
-        <div class="footer-copyright">
+        
+        <div class="footer-bottom-bar">
             <p>Bản quyền &copy; 2025 thuộc về <strong>Nhóm 2 - UNETI</strong>.</p>
             <p>Nội dung này chỉ dành cho người trên 18 tuổi. Thưởng thức có trách nhiệm.</p>
         </div>
     </div>
 </footer>
+
 <div id="cart-notification" class="cart-notification-popup">
     Thêm vào giỏ hàng thành công!
 </div>
-
 
 <script src="js/script.js"></script>

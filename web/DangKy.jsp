@@ -13,14 +13,19 @@
             background: #fff; padding: 30px; border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
+        /* Thêm CSS để kiểm soát kích thước logo */
+        .login-container .logo img {
+            max-width: 180px; /* Điều chỉnh kích thước tối đa của logo */
+            height: auto; /* Đảm bảo tỷ lệ ảnh không bị méo */
+        }
     </style>
 </head>
 <body>
     
     <div class="login-container">
-        <div class="logo" style="text-align: center; margin-bottom: 20px;">
+        <div class="logo" >
             <a href="products">
-                <img src="https://placehold.co/150x50/e8e8e8/333?text=LOGO" alt="Logo">
+                <img src="img/logo.png" alt="Logo"/>
             </a>
         </div>
         
@@ -68,7 +73,5 @@
             
             <p class="form-footer">Đã có tài khoản? <a href="DangNhap.jsp">Đăng nhập ngay</a></p>
         </form>
-    </div>
-
-</body>
+    </div> </body>
 </html>

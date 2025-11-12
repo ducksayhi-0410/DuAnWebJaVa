@@ -17,6 +17,14 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.Part;
 import java.io.File;
 
+// === THÊM CÁC IMPORT MỚI ĐỂ SỬA LỖI UPLOAD & XÓA FILE ===
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.io.InputStream;
+// === KẾT THÚC THÊM IMPORT ===
+
 @WebServlet(name = "AdminProductsServlet", urlPatterns = {"/admin-products"})
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024 * 2,  // 2MB
@@ -25,7 +33,8 @@ import java.io.File;
 )
 public class AdminProductsServlet extends HttpServlet {
     
-    private static final String UPLOAD_DIR = "uploads";
+    // Đảm bảo UPLOAD_DIR khớp với lựa chọn của bạn ("uploads" hoặc "img")
+    private static final String UPLOAD_DIR = "img"; // <-- KIỂM TRA LẠI ĐÂY
 
     private boolean checkAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -36,7 +45,7 @@ public class AdminProductsServlet extends HttpServlet {
     }
 
     // ========================================================
-    // ===          CHỈNH SỬA LẠI doGet                    ===
+    // ===          doGet (Giữ nguyên)                      ===
     // ========================================================
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -54,27 +63,24 @@ public class AdminProductsServlet extends HttpServlet {
             
             switch (action) {
                 case "delete": // Xóa sản phẩm
+                    // === SỬA HÀM NÀY ĐỂ TRUYỀN REQUEST VÀO ===
                     handleDelete(request, response, productDb);
                     return; 
                 
                 case "edit": // Sửa sản phẩm
                     handleEdit(request, response, productDb);
-                    break; // break để chạy tiếp xuống loadProductList
+                    break;
                 
-                // --- THÊM LOGIC MỚI ---
                 case "deleteCategory":
                     handleDeleteCategory(request, response, new CategoryDb());
-                    return; // Chuyển hướng sau khi xóa
-                // --- KẾT THÚC ---
+                    return;
             }
         }
         
-        // Mặc định: Hiển thị danh sách sản phẩm VÀ danh mục
         loadProductList(request, response);
     }
 
-    // ========================================================
-    // ===          CHỈNH SỬA LẠI doPost                   ===
+    // =DànG (Giữ nguyên)                     ===
     // ========================================================
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -99,21 +105,66 @@ public class AdminProductsServlet extends HttpServlet {
                     handleUpdate(request, response, productDb);
                     break;
                     
-                // --- THÊM LOGIC MỚI ---
                 case "addCategory":
                     handleAddCategory(request, response, new CategoryDb());
                     break;
-                // --- KẾT THÚC ---
             }
         }
         
-        // Tải lại trang sau khi POST
         response.sendRedirect("admin-products");
     }
 
+    // ========================================================
+    // ===    HÀM `handleDelete` (ĐÃ NÂNG CẤP)             ===
+    // ========================================================
+    
     /**
-     * Tải trang quản lý (danh sách sản phẩm, danh mục)
+     * Xử lý xóa sản phẩm (bao gồm cả xóa tệp ảnh)
      */
+    private void handleDelete(HttpServletRequest request, HttpServletResponse response, ProductDb productDb) 
+            throws IOException {
+        
+        String id = request.getParameter("id");
+        
+        // --- BƯỚC 1: LẤY THÔNG TIN SẢN PHẨM TRƯỚC KHI XÓA ---
+        Product productToDelete = productDb.getProductById(id); //
+        
+        if (productToDelete != null) {
+            String imageUrl = productToDelete.getImageUrl(); //
+            
+            // --- BƯỚC 2: KIỂM TRA VÀ XÓA TỆP ẢNH ---
+            // Chỉ xóa nếu ảnh là tệp tải lên (nằm trong UPLOAD_DIR), không xóa link http
+            if (imageUrl != null && imageUrl.startsWith(UPLOAD_DIR)) {
+                try {
+                    // Lấy đường dẫn thư mục gốc của webapp (ví dụ: C:\...(build\web))
+                    String applicationPath = request.getServletContext().getRealPath("");
+                    // Tạo đường dẫn đầy đủ đến tệp ảnh
+                    Path imagePath = Paths.get(applicationPath, imageUrl);
+                    
+                    // Xóa tệp
+                    Files.deleteIfExists(imagePath);
+                    System.out.println("Đã xóa tệp ảnh: " + imagePath.toString());
+                    
+                } catch (Exception e) {
+                    System.err.println("Lỗi khi xóa tệp ảnh: " + e.getMessage());
+                }
+            }
+        }
+
+        // --- BƯỚC 3: XÓA SẢN PHẨM KHỎI CSDL ---
+        boolean success = productDb.deleteProduct(id); //
+        
+        if (!success) {
+            request.getSession().setAttribute("adminError", "Không thể xóa sản phẩm này (có thể đã tồn tại trong đơn hàng).");
+        }
+        
+        response.sendRedirect("admin-products");
+    }
+
+    // ========================================================
+    // ===    CÁC HÀM KHÁC (GIỮ NGUYÊN)                    ===
+    // ========================================================
+
     private void loadProductList(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
@@ -128,29 +179,17 @@ public class AdminProductsServlet extends HttpServlet {
         
         request.getRequestDispatcher("admin-products.jsp").forward(request, response);
     }
-
-    // [ ... Giữ nguyên các hàm: handleEdit, handleDelete, handleAdd, handleUpdate, getImageUrl ... ]
     
-    // ========================================================
-    // ===    CÁC HÀM XỬ LÝ SẢN PHẨM (GIỮ NGUYÊN)         ===
-    // ========================================================
     private void handleEdit(HttpServletRequest request, HttpServletResponse response, ProductDb productDb) {
         String id = request.getParameter("id");
-        Product productToEdit = productDb.getProductById(id);
+        Product productToEdit = productDb.getProductById(id); //
         request.setAttribute("productToEdit", productToEdit);
     }
-    private void handleDelete(HttpServletRequest request, HttpServletResponse response, ProductDb productDb) throws IOException {
-        String id = request.getParameter("id");
-        boolean success = productDb.deleteProduct(id);
-        if (!success) {
-            request.getSession().setAttribute("adminError", "Không thể xóa sản phẩm này (có thể đã tồn tại trong đơn hàng).");
-        }
-        response.sendRedirect("admin-products");
-    }
+
     private void handleAdd(HttpServletRequest request, HttpServletResponse response, ProductDb productDb) throws IOException, ServletException {
         try {
             Product p = new Product();
-            String imageUrl = getImageUrl(request, null);
+            String imageUrl = getImageUrl(request, null); 
             p.setName(request.getParameter("name"));
             p.setDescription(request.getParameter("description"));
             p.setPrice(Double.parseDouble(request.getParameter("price")));
@@ -158,39 +197,73 @@ public class AdminProductsServlet extends HttpServlet {
             p.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
             p.setQuantity(Integer.parseInt(request.getParameter("quantity")));
             p.setManufacturer(request.getParameter("manufacturer"));
-            productDb.addProduct(p);
+            productDb.addProduct(p); //
         } catch (NumberFormatException e) { System.err.println("Lỗi parse số khi thêm sản phẩm: " + e.getMessage()); }
     }
+    
     private void handleUpdate(HttpServletRequest request, HttpServletResponse response, ProductDb productDb) throws IOException, ServletException {
         try {
             Product p = new Product();
             String id = request.getParameter("id");
             String existingImageUrl = request.getParameter("existingImageUrl");
-            String imageUrl = getImageUrl(request, existingImageUrl);
+            
+            // --- XỬ LÝ XÓA ẢNH CŨ NẾU TẢI ẢNH MỚI ---
+            // (Phần này code của bạn chưa có, tôi thêm vào)
+            Product oldProduct = productDb.getProductById(id); //
+            String oldImageUrl = (oldProduct != null) ? oldProduct.getImageUrl() : existingImageUrl; //
+            
+            String newImageUrl = getImageUrl(request, oldImageUrl); // Gọi hàm đã sửa lỗi
+            
+            // Nếu ảnh mới khác ảnh cũ VÀ ảnh cũ là tệp tải lên
+            if (oldImageUrl != null && !oldImageUrl.equals(newImageUrl) && oldImageUrl.startsWith(UPLOAD_DIR)) {
+                 try {
+                    String applicationPath = request.getServletContext().getRealPath("");
+                    Path imagePath = Paths.get(applicationPath, oldImageUrl);
+                    Files.deleteIfExists(imagePath);
+                    System.out.println("Đã xóa tệp ảnh cũ khi cập nhật: " + imagePath.toString());
+                 } catch (Exception e) {
+                     System.err.println("Lỗi khi xóa tệp ảnh cũ: " + e.getMessage());
+                 }
+            }
+            // --- KẾT THÚC XỬ LÝ XÓA ẢNH CŨ ---
+            
             p.setId(Integer.parseInt(id)); 
             p.setName(request.getParameter("name"));
             p.setDescription(request.getParameter("description"));
             p.setPrice(Double.parseDouble(request.getParameter("price")));
-            p.setImageUrl(imageUrl);
+            p.setImageUrl(newImageUrl); // Dùng ảnh mới
             p.setCategoryId(Integer.parseInt(request.getParameter("categoryId")));
             p.setQuantity(Integer.parseInt(request.getParameter("quantity")));
             p.setManufacturer(request.getParameter("manufacturer"));
-            productDb.updateProduct(p);
+            productDb.updateProduct(p); //
         } catch (NumberFormatException e) { System.err.println("Lỗi parse số khi cập nhật sản phẩm: " + e.getMessage()); }
     }
-    private String getImageUrl(HttpServletRequest request, String existingImageUrl) throws IOException, ServletException {
+    
+    private String getImageUrl(HttpServletRequest request, String existingImageUrl) 
+            throws IOException, ServletException {
+        
         String imageUrlToSave = null;
         Part filePart = request.getPart("imageFile");
         String fileName = filePart.getSubmittedFileName();
+        
         if (fileName != null && !fileName.isEmpty()) {
+            
             String applicationPath = request.getServletContext().getRealPath("");
-            String uploadFilePath = applicationPath + File.separator + UPLOAD_DIR;
-            File fileUploadDir = new File(uploadFilePath);
-            if (!fileUploadDir.exists()) {
-                fileUploadDir.mkdirs();
+            Path uploadPath = Paths.get(applicationPath, UPLOAD_DIR);
+            
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
             }
-            filePart.write(uploadFilePath + File.separator + fileName);
-            imageUrlToSave = UPLOAD_DIR + "/" + fileName;
+            
+            String safeFileName = Paths.get(fileName).getFileName().toString();
+            Path destinationFile = uploadPath.resolve(safeFileName);
+            
+            try (InputStream fileContent = filePart.getInputStream()) {
+                Files.copy(fileContent, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+            }
+            
+            imageUrlToSave = UPLOAD_DIR + "/" + safeFileName;
+            
         } else {
             String imageUrlFromText = request.getParameter("imageUrl");
             if (imageUrlFromText != null && !imageUrlFromText.isEmpty()) {
@@ -199,38 +272,29 @@ public class AdminProductsServlet extends HttpServlet {
                 imageUrlToSave = existingImageUrl;
             }
         }
+        
         return imageUrlToSave;
     }
     
-    // ========================================================
-    // ===    CÁC HÀM XỬ LÝ DANH MỤC (MỚI)               ===
-    // ========================================================
-    
-    
-     
     private void handleDeleteCategory(HttpServletRequest request, HttpServletResponse response, CategoryDb db) 
             throws IOException {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
-            boolean success = db.deleteCategory(id);
+            boolean success = db.deleteCategory(id); //
             if (!success) {
-                // Đặt thông báo lỗi (thường là do vi phạm khóa ngoại)
                 request.getSession().setAttribute("adminError", "Không thể xóa danh mục. (Có thể đang có sản phẩm thuộc danh mục này).");
             }
         } catch (NumberFormatException e) {
             System.err.println("Lỗi parse ID khi xóa danh mục: " + e.getMessage());
         }
-        response.sendRedirect("admin-products"); // Tải lại trang
+        response.sendRedirect("admin-products");
     }
     
-    /**
-   
-     */
     private void handleAddCategory(HttpServletRequest request, HttpServletResponse response, CategoryDb db) 
             throws IOException {
         String name = request.getParameter("name");
         if (name != null && !name.trim().isEmpty()) {
-            db.addCategory(name);
+            db.addCategory(name); //
         }
        
     }

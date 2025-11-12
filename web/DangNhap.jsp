@@ -17,10 +17,10 @@
 </head>
 <body>
     
-    <div class="login-container">
-        <div class="logo" style="text-align: center; margin-bottom: 20px;">
+   <div class="login-container">
+        <div class="logo" >
             <a href="products">
-                <img src="https://placehold.co/150x50/e8e8e8/333?text=LOGO" alt="Logo">
+                <img src="img/logo.png" alt="Logo"/>
             </a>
         </div>
         

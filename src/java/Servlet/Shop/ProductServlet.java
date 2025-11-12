@@ -28,7 +28,7 @@ public class ProductServlet extends HttpServlet {
         String maxPrice = request.getParameter("maxPrice");
         String sortOrder = request.getParameter("sort");
 
-        // --- BẮT ĐẦU SỬA LỖI ---
+    
         // Chuyển đổi NULL thành chuỗi rỗng ("")
         // Việc này đảm bảo ProductDb nhận được giá trị nhất quán
         // giống như khi bấm link filter trên JSP
